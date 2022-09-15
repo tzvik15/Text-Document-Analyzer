@@ -7,10 +7,7 @@ import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.io.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+
 
 public class Database {
 
