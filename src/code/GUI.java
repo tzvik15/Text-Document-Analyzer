@@ -30,8 +30,7 @@ public class GUI {
     BufferedReader file;
     Tokenizer tokenizer;
 
-    //array for input data
-    protected String[] inputArr = new String[4];
+
 
     // This function will return the MainGUI, ready to be setVisible()
     // This starts the application
@@ -341,12 +340,7 @@ public class GUI {
 
         private final ActionListener parseClick = event -> { // File > Add Entry
             System.out.println("You clicked the add entry window Parse Button!");
-            inputArr[0] = authorTextField.getText();
-            inputArr[1] = titleTextField.getText();
-            inputArr[2] = publishYearTextField.getText();
-            inputArr[3] = (String)genreDropdown.getSelectedItem();
-
-            ParserPrototype parser = new ParserPrototype(inputArr[0], inputArr[1], inputArr[2], inputArr[3]);
+            ParserPrototype parser = new ParserPrototype(authorTextField.getText(), titleTextField.getText(), publishYearTextField.getText(), (String)genreDropdown.getSelectedItem());
             parser.parseDoc(file);
         };
     }
