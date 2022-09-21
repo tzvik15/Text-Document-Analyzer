@@ -209,6 +209,7 @@ public class GUI {
         JTextField titleTextField;
         JTextField publishYearTextField;
         JComboBox<String> genreDropdown;
+        JTextField browseTextField;
 
         // Create the panels to hold groups of components
         JPanel inputPanel = new JPanel();
@@ -274,7 +275,7 @@ public class GUI {
             JLabel selectDocLabel = new JLabel("Select document to parse:");
             selectDocLabel.setPreferredSize(new Dimension(365, 28));
             
-            JTextField browseTextField = new JTextField();
+            browseTextField = new JTextField();
             browseTextField.setPreferredSize(new Dimension(265, 28));
             browseTextField.setEditable(false);
             browseTextField.setBackground(Color.WHITE);
@@ -319,25 +320,23 @@ public class GUI {
             try {
                 String filePath ="";
     		
-            JFrame jf = new JFrame("Dialog");
-            jf.setAlwaysOnTop(true);
-            
-    		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-
-    		int returnValue = jfc.showOpenDialog(jf);
+                JFrame jf = new JFrame("Dialog");
+                jf.setAlwaysOnTop(true);
+                
+                JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+                int returnValue = jfc.showOpenDialog(jf);
     		
-    		if(returnValue == JFileChooser.APPROVE_OPTION) {
-    			 filePath = jfc.getSelectedFile().getAbsolutePath();
-    		}
-    		
-    		jf.dispose();
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    filePath = jfc.getSelectedFile().getAbsolutePath();
+                    browseTextField.setText(filePath);
+                }
+                jf.dispose();
 
-            file = new BufferedReader(new FileReader(filePath));
+                file = new BufferedReader(new FileReader(filePath));
+
             } catch (FileNotFoundException ex) {
                 System.out.println("File was not found.");
             }
-            
-
         };
 
         private final ActionListener parseClick = event -> { // File > Add Entry
