@@ -8,14 +8,9 @@ import java.text.DecimalFormat;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.Scanner;
-
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
-
 import java.io.*;
 
 public class ParserPrototype {
@@ -33,9 +28,7 @@ public class ParserPrototype {
     double avgSyllablesPerWord = 0; // Average syllables per words
     double avgWordLength = 0; // Average word length
     
-    
     public ParserPrototype(String author, String title, String yearPublished, String genre) {
-    	
     	this.author = author;
     	this.title = title;
     	this.yearPublished = yearPublished;
@@ -230,7 +223,7 @@ public class ParserPrototype {
             BufferedReader file = new BufferedReader(new FileReader(filePath));
             Tokenizer tokenizer = new Tokenizer(file);
 
-            // Load the first token by called the Tokenizer's method
+            // Load the first token by calling the Tokenizer's method
             currentToken = tokenizer.getNextToken();
 
             // While token isn't END_OF_FILE...
@@ -290,7 +283,7 @@ public class ParserPrototype {
             System.out.println("Sentence Count: " + sentenceCount);
             System.out.println("Syllable Count: " + syllableCount);
             System.out.println("Flesch Reading Ease Score: " + df.format(fleschScore));
-            System.out.println("AVG Word Per Sentence: " + df.format(avgWordLength));
+            System.out.println("AVG Word Per Sentence: " + df.format(avgWordsPerSentence));
             System.out.println("AVG Syllables Per Word: " + df.format(avgSyllablesPerWord));
             System.out.println("AVG Word Length: " + df.format(avgWordLength) + "\n");
             

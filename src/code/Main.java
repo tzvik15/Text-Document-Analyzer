@@ -1,7 +1,5 @@
 package code;
 
-
-
 import java.util.*;
 
 // Table 'records' has these fields:
@@ -22,16 +20,9 @@ import java.util.*;
     // DISTINCT_WORDS TEXT,         <---distinct words map as string
     // DISTINCT_PUNCTUATION TEXT    <---distinct punctuation map as string
 
-//////////// This is all prototyping, so we can use it but it doesn't do
-//////////// any checks and may not be the best implementation.
-//////////// It's all just proof of concept.
-
 public class Main {
-	
-	
 
     public static void main(String[] args) {
-        
     	
     	//prompt user to enter author, title, yearPublished, and Genre
         String author, title, yearPublished, genre;
@@ -39,19 +30,15 @@ public class Main {
         Scanner scan = new Scanner(System.in);
     	
     	System.out.println("Please enter author: ");
-    
         author = scan.nextLine();
         
         System.out.println("Please enter book title: ");
-        
         title = scan.nextLine();
         
         System.out.println("Please enter year: ");
-        
         yearPublished = scan.nextLine();
         
         System.out.println("Please enter genre: ");
-        
         genre = scan.nextLine();
         
         scan.close();
@@ -65,7 +52,6 @@ public class Main {
         /*
         // Testing the retrieveRecordByAuthorTitle function
         String[] results = parser.retrieveRecordByAuthorTitle("records", author, title);
-
         
         System.out.println("ID: " + results[0]);
         System.out.println("Author: " + results[1]);
