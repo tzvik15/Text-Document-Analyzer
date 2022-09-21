@@ -3,6 +3,22 @@ package code;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.text.DecimalFormat;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.Scanner;
+import java.io.*;
+
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileSystemView;
 
 public class GUI {
     AddEntryGUI addEntryWindow;         // Instantiate objects for each window.
@@ -11,6 +27,11 @@ public class GUI {
     QueryGUI queryWindow;
     AboutGUI aboutWindow;
     UserGuideGUI userGuideWindow;
+    BufferedReader file;
+    Tokenizer tokenizer;
+
+    //array for input data
+    protected String[] inputArr = new String[4];
 
     // This function will return the MainGUI, ready to be setVisible()
     // This starts the application
@@ -183,6 +204,12 @@ public class GUI {
 
     // The 'Add Entry' window
     private class AddEntryGUI extends JFrame {
+        //declaring the input textfields to capture input with listeners
+        JTextField authorTextField;
+        JTextField titleTextField;
+        JTextField publishYearTextField;
+        JComboBox<String> genreDropdown;
+
         // Create the panels to hold groups of components
         JPanel inputPanel = new JPanel();
         JPanel browsePanel = new JPanel();
@@ -218,19 +245,19 @@ public class GUI {
             JLabel authorLabel = new JLabel("Author:");
             authorLabel.setPreferredSize(new Dimension(90, 28));
             authorLabel.setVerticalAlignment(SwingConstants.CENTER);
-            JTextField authorTextField = new JTextField();
+            authorTextField = new JTextField();
             authorTextField.setPreferredSize(new Dimension(275, 28));
 
             JLabel titleLabel = new JLabel("Title:");
             titleLabel.setPreferredSize(new Dimension(90, 28));
             titleLabel.setVerticalAlignment(SwingConstants.CENTER);
-            JTextField titleTextField = new JTextField();
+            titleTextField = new JTextField();
             titleTextField.setPreferredSize(new Dimension(275, 28));
 
             JLabel publishYearLabel = new JLabel("Publish Year:");
             publishYearLabel.setPreferredSize(new Dimension(90, 28));
             publishYearLabel.setVerticalAlignment(SwingConstants.CENTER);
-            JTextField publishYearTextField = new JTextField();
+            publishYearTextField = new JTextField();
             publishYearTextField.setPreferredSize(new Dimension(275, 28));
 
             // Create the Genre dropdown menu and label for the input panel
@@ -238,7 +265,7 @@ public class GUI {
             genreLabel.setPreferredSize(new Dimension(90, 28));
             genreLabel.setVerticalAlignment(SwingConstants.CENTER);
             String[] genres = {"Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", "Horror", "Romance", "Sci-Fi"};
-            JComboBox<String> genreDropdown = new JComboBox<>(genres);
+            genreDropdown = new JComboBox<>(genres);
             genreDropdown.setPreferredSize(new Dimension(275, 28));
             genreDropdown.setBackground(Color.WHITE);
 
@@ -288,10 +315,40 @@ public class GUI {
 
         private final ActionListener browseClick = event -> { // File > Add Entry
             System.out.println("You clicked the add entry window Browse Button!");
+
+            try {
+                String filePath ="";
+    		
+            JFrame jf = new JFrame("Dialog");
+            jf.setAlwaysOnTop(true);
+            
+    		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+    		int returnValue = jfc.showOpenDialog(jf);
+    		
+    		if(returnValue == JFileChooser.APPROVE_OPTION) {
+    			 filePath = jfc.getSelectedFile().getAbsolutePath();
+    		}
+    		
+    		jf.dispose();
+
+            file = new BufferedReader(new FileReader(filePath));
+            } catch (FileNotFoundException ex) {
+                System.out.println("File was not found.");
+            }
+            
+
         };
 
         private final ActionListener parseClick = event -> { // File > Add Entry
             System.out.println("You clicked the add entry window Parse Button!");
+            inputArr[0] = authorTextField.getText();
+            inputArr[1] = titleTextField.getText();
+            inputArr[2] = publishYearTextField.getText();
+            inputArr[3] = (String)genreDropdown.getSelectedItem();
+
+            ParserPrototype parser = new ParserPrototype(inputArr[0], inputArr[1], inputArr[2], inputArr[3]);
+            parser.parseDoc(file);
         };
     }
 

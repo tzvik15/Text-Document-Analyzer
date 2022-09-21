@@ -198,7 +198,7 @@ public class ParserPrototype {
     // Parser prototype functionality
     // Does distinct words, sentence count, etc.
     // Distinct Words Count adapted from code found at https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/FrequencyCounter.java.html
-    public void parseDoc() {
+    public void parseDoc(BufferedReader f) {
         String currentToken = ""; // Will hold the current word/punctuation being parsed
         SyllableCounter sylCounter = new SyllableCounter(); // Create the syllable counter object
 
@@ -212,23 +212,24 @@ public class ParserPrototype {
             // Create a bufferedreader with the file (hardcoded for my file system)
             // Give the bufferedreader to the tokenizer to extract individual words/punctuation
 
-            String filePath ="";
+            // String filePath ="";
     		
-            JFrame jf = new JFrame("Dialog");
-            jf.setAlwaysOnTop(true);
+            // JFrame jf = new JFrame("Dialog");
+            // jf.setAlwaysOnTop(true);
             
-    		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+    		// JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
-    		int returnValue = jfc.showOpenDialog(jf);
+    		// int returnValue = jfc.showOpenDialog(jf);
     		
-    		if(returnValue == JFileChooser.APPROVE_OPTION) {
-    			 filePath = jfc.getSelectedFile().getAbsolutePath();
-    		}
+    		// if(returnValue == JFileChooser.APPROVE_OPTION) {
+    		// 	 filePath = jfc.getSelectedFile().getAbsolutePath();
+    		// }
     		
-    		jf.dispose();
+    		// jf.dispose();
             
-            BufferedReader file = new BufferedReader(new FileReader(filePath));
-            Tokenizer tokenizer = new Tokenizer(file);
+            // BufferedReader file = new BufferedReader(new FileReader(filePath));
+            //Tokenizer tokenizer = new Tokenizer(file);
+            Tokenizer tokenizer = new Tokenizer(f);
 
             // Load the first token by called the Tokenizer's method
             currentToken = tokenizer.getNextToken();
