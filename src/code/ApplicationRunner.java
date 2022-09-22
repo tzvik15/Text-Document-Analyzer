@@ -24,10 +24,6 @@ import javax.xml.crypto.Data;
 // DISTINCT_WORDS TEXT,         <---distinct words map as string
 // DISTINCT_PUNCTUATION TEXT    <---distinct punctuation map as string
 
-//////////// This is all prototyping, so we can use it but it doesn't do
-//////////// any checks and may not be the best implementation.
-//////////// It's all just proof of concept.
-
 public class ApplicationRunner {
 
     private static String inputDataArr[] = new String[4];

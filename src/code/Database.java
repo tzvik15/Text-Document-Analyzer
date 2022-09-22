@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.*;
 
 
 public class Database {
@@ -136,6 +137,76 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    // Testing out retrieving a full record from the database
+    // Returns the record as a string array
+    public String[] retrieveRecordByAuthorTitle(String table, String author, String title) {
+
+        String[] resultStr = new String[16]; // String to hold the returned results
+
+        try{
+            String url = "jdbc:sqlite:./ParsedDocumentsData.db";
+            Connection conn = DriverManager.getConnection(url);
+
+            // Create and execute the SQL query, store the results
+            String sql = "SELECT * FROM " + table + " WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sql);
+
+            // Get the results as a string
+            result.next();
+
+            for (int i = 1; i < 17; i++) {
+                resultStr[i-1] = result.getString(i);
+            }
+
+            conn.close(); // Close the database connection
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return resultStr; // Return the result string
+    }
+
+    // Get the hashmap from the database
+    // Converts string data from database back into hashmap
+    public HashMap<String, Integer> retrieveHashMapByAuthorTitle(String table, String field, String author, String title) {  
+
+        // Create the hashmap again
+        HashMap<String, Integer> myHashMap = new HashMap<String, Integer>();
+
+        try{
+            String url = "jdbc:sqlite:./ParsedDocumentsData.db";
+            Connection conn = DriverManager.getConnection(url);
+
+            // Create and execute the SQL query, store the results
+            String sql = "SELECT " + field + " FROM " + table + " WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sql);
+
+            // Get the results as a string
+            String resultStr = result.getString(field);
+
+            // This line removes the curly brackets from the string data { }
+            resultStr = resultStr.substring(1, resultStr.length() - 1);
+
+            // Split the data between comma/space ", "
+            String[] resultArr = resultStr.split(", ");
+
+            // For each word/value combo, split and add to hashmap
+            for (int i = 0; i < resultArr.length; i++) {
+                String pair = resultArr[i];
+                String[] pairArr = pair.split("=");
+                String key = pairArr[0];
+                int value = Integer.parseInt(pairArr[1]);
+                
+                myHashMap.put(key, value);
+            }
+            conn.close(); // Close the database connection
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return myHashMap; // Return the hashmap
     }
 
     public static void main(String[] args) throws Exception {
