@@ -8,7 +8,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-
 public class Database {
 
     // initialize db
@@ -57,17 +56,19 @@ public class Database {
                 + " id integer PRIMARY KEY,\n"
                 + " author text NOT NULL,\n"
                 + " title text NOT NULL,\n"
-                + " published integer,\n"
+                + " published integer NOT NULL,\n"
                 + " genre text NOT NULL,\n"
-                + " wordCount integer NOT NULL,\n"
-                + " sentenceCount integer NOT NULL,\n"
+                + " wordCount real NOT NULL,\n"
+                + " sentenceCount real NOT NULL,\n"
                 + " avgWordLength real NOT NULL,\n"
                 + " avgSentenceLength real NOT NULL,\n"
-                + " punctuationCount integer NOT NULL,\n"
+                + " punctuationCount real NOT NULL,\n"
                 + " Flesch real,\n"
-                + " syllableCount integer,\n"
-                + " distinctWordCount text,\n"
-                + " distinctPunctuationCount text\n"
+                + " syllableCount real,\n"
+                + " avgSyllablePerWord real,\n"
+                + " distinctWordCount real,\n"
+                + " wordsHash text,\n"
+                + " punctuationHash text\n"
                 + ");";
 
         try {
@@ -81,9 +82,13 @@ public class Database {
     }
 
     // insert new row
-    public static void insert(String author, String title, int published, String genre, int wordCount,
-            int sentenceCount, double avgWordLength, double avgSentenceLength, int punctuationCount) {
-        String sql = "INSERT INTO textdata(author, title, published, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount) VALUES(?,?,?,?,?,?,?,?,?)";
+    public static void insert(String author, String title, int published, String genre, double wordCount,
+            double sentenceCount, double avgWordLength, double avgSentenceLength,
+            double punctuationCount, double fleschScore, double syllableCount,
+            double avgSyllablePerWord,
+            double distinctWordCount, 
+            String wordHash, String punctuationHash) {
+        String sql = "INSERT INTO textdata(author, title, published, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount, Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         String url = "jdbc:sqlite:./ParsedDocumentsData.db";
 
         try {
@@ -93,11 +98,11 @@ public class Database {
             pstmt.setString(2, title);
             pstmt.setInt(3, published);
             pstmt.setString(4, genre);
-            pstmt.setInt(5, wordCount);
-            pstmt.setInt(6, sentenceCount);
+            pstmt.setDouble(5, wordCount);
+            pstmt.setDouble(6, sentenceCount);
             pstmt.setDouble(7, avgWordLength);
             pstmt.setDouble(8, avgSentenceLength);
-            pstmt.setInt(9, punctuationCount);
+            pstmt.setDouble(9, punctuationCount);
 
             pstmt.executeUpdate();
             System.out.println("inserted row");
@@ -128,7 +133,7 @@ public class Database {
                         rs.getDouble("avgWordLength") + "\t" +
                         rs.getDouble("avgSentenceLength") + "\t" +
                         rs.getInt("punctuationCount"));
-                //testing capturing retrieved data as variable
+                // testing capturing retrieved data as variable
                 String testStr = rs.getString("author");
                 System.out.println(testStr.length());
 
@@ -140,10 +145,11 @@ public class Database {
 
     public static void main(String[] args) throws Exception {
 
-        createNewDatabase("ParsedDocumentsData.db");
-        createNewTable();
-        // dropTable();
-        insert("Bob bobson", "the test that tested me", 2023, "comedy", 3678945, 23599, 4.3, 7.9, 100000);
+        //createNewDatabase("ParsedDocumentsData.db");
+        //createNewTable();
+         //dropTable();
+        // insert("Bob bobson", "the test that tested me", 2023, "comedy", 3678945,
+        // 23599, 4.3, 7.9, 100000);
         selectAll();
     }
 }

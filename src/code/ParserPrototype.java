@@ -27,12 +27,15 @@ public class ParserPrototype {
     double avgWordsPerSentence = 0; // Average words per sentence
     double avgSyllablesPerWord = 0; // Average syllables per words
     double avgWordLength = 0; // Average word length
+    HashMap<String, Integer> distinctWordsMap;
+    HashMap<String, Integer> punctuationCountMap;
     
-    public ParserPrototype(String author, String title, String yearPublished, String genre) {
-    	this.author = author;
-    	this.title = title;
-    	this.yearPublished = yearPublished;
-    	this.genre = genre;
+    public ParserPrototype() {
+        //String author, String title, String yearPublished, String genre
+    	// this.author = author;
+    	// this.title = title;
+    	// this.yearPublished = yearPublished;
+    	// this.genre = genre;
     	
     }
 
@@ -48,6 +51,58 @@ public class ParserPrototype {
 
         return conn;
     }
+
+
+    //variable GET methods
+
+    protected String getWordHash(){
+        return distinctWordsMap.toString();
+    }
+
+    protected String getPunctuationHash(){
+        return punctuationCountMap.toString();
+    }
+
+    protected double getWordCount() {
+        return wordCount;
+    }
+
+    protected double getDistinctWordsCount() {
+        return distinctWordsCount;
+    }
+
+    protected double getPunctuationCount() {
+        return punctuationCount;
+    }
+
+    protected double getSentenceCount() {
+        return sentenceCount;
+    }
+
+    protected double getSyllableCount() {
+        return syllableCount;
+    }
+
+    protected double getFleschScore() {
+        return fleschScore;
+    }
+
+    protected double getAvgWordsPerSentence() {
+        return avgWordsPerSentence;
+    }
+
+    protected double getAvgSyllablesPerWord() {
+        return avgSyllablesPerWord;
+    }
+
+    protected double getAvgWordLength() {
+        return avgWordLength;
+    }
+
+
+
+
+
 
     // Insert a record into the database
     public void insertRecord(
@@ -196,8 +251,8 @@ public class ParserPrototype {
         SyllableCounter sylCounter = new SyllableCounter(); // Create the syllable counter object
 
         // Distinct words hashmap AND distinct punctuation hashmap
-        HashMap<String, Integer> distinctWordsMap = new HashMap<String, Integer>();
-        HashMap<String, Integer> punctuationCountMap = new HashMap<String, Integer>();
+        distinctWordsMap = new HashMap<String, Integer>();
+        punctuationCountMap = new HashMap<String, Integer>();
 
         try {
             // Prompt user to enter in author, title, year, and genre

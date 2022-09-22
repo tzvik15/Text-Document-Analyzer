@@ -21,16 +21,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
 
 public class GUI {
-    AddEntryGUI addEntryWindow;         // Instantiate objects for each window.
-    DeleteEntryGUI deleteEntryWindow;   // This prevents opening multiple windows of the same type.
-    SearchGUI searchWindow;             // User can't open two 'Add Entry' windows at once.
+    AddEntryGUI addEntryWindow; // Instantiate objects for each window.
+    DeleteEntryGUI deleteEntryWindow; // This prevents opening multiple windows of the same type.
+    SearchGUI searchWindow; // User can't open two 'Add Entry' windows at once.
     QueryGUI queryWindow;
     AboutGUI aboutWindow;
     UserGuideGUI userGuideWindow;
     BufferedReader file;
     Tokenizer tokenizer;
 
-
+    static Database db;
 
     // This function will return the MainGUI, ready to be setVisible()
     // This starts the application
@@ -66,7 +66,7 @@ public class GUI {
 
             // Create the dropdown menu
             // array 'options' will need to be populated with database records
-            String[] options = {"Test Option 1", "Test Option 2", "Test Option 3"};
+            String[] options = { "Test Option 1", "Test Option 2", "Test Option 3" };
             JComboBox<String> recordsDropdown = new JComboBox<>(options);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
@@ -75,20 +75,21 @@ public class GUI {
             JButton displayButton = new JButton("Display");
             displayButton.setPreferredSize(new Dimension(100, 28));
             displayButton.addActionListener(displayClick);
-            
+
             // Create the display area for data
             JTextArea displayArea = new JTextArea(16, 40);
             displayArea.setEditable(false);
             displayArea.setLineWrap(true);
             displayArea.setWrapStyleWord(true);
             displayArea.setBorder(BorderFactory.createLoweredBevelBorder());
-            JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a scroll bar
+            JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a
+                                                                   // scroll bar
 
             // Add components to the panels
             inputPanel.add(recordsDropdownLabel);
             inputPanel.add(recordsDropdown);
             buttonPanel.add(displayButton);
-            outputPanel.add(scrollPane); //<--- The display area (within the scroll pane)
+            outputPanel.add(scrollPane); // <--- The display area (within the scroll pane)
 
             add(inputPanel); // Add panels to the window
             add(buttonPanel);
@@ -108,26 +109,29 @@ public class GUI {
             // Create the File, About, and Help menu dropdown options
             JMenu topMenuFile = new JMenu("File");
             topMenuFile.setMnemonic(KeyEvent.VK_A);
-            topMenuFile.getAccessibleContext().setAccessibleDescription("The File menu on the top menu of the application.");
+            topMenuFile.getAccessibleContext()
+                    .setAccessibleDescription("The File menu on the top menu of the application.");
 
             JMenu topMenuAbout = new JMenu("About");
             topMenuFile.setMnemonic(KeyEvent.VK_B);
-            topMenuFile.getAccessibleContext().setAccessibleDescription("The About menu on the top menu of the application.");
+            topMenuFile.getAccessibleContext()
+                    .setAccessibleDescription("The About menu on the top menu of the application.");
 
             JMenu topMenuHelp = new JMenu("Help");
             topMenuFile.setMnemonic(KeyEvent.VK_C);
-            topMenuFile.getAccessibleContext().setAccessibleDescription("The Help menu on the top menu of the application.");
+            topMenuFile.getAccessibleContext()
+                    .setAccessibleDescription("The Help menu on the top menu of the application.");
 
             // Create and add the menu items to the File menu
             JMenuItem menuItemAdd = new JMenuItem("Add Entry");
             menuItemAdd.addActionListener(addEntryClick);
-            
+
             JMenuItem menuItemDelete = new JMenuItem("Delete Entry");
             menuItemDelete.addActionListener(deleteEntryClick);
-            
+
             JMenuItem menuItemSearch = new JMenuItem("Search Distinct Words");
             menuItemSearch.addActionListener(searchClick);
-            
+
             JMenuItem menuItemQuery = new JMenuItem("Query Database");
             menuItemQuery.addActionListener(queryClick);
 
@@ -142,7 +146,7 @@ public class GUI {
             // Create and add the menu items to the About and Help menus
             JMenuItem menuItemAbout = new JMenuItem("About Text Document Analyzer");
             menuItemAbout.addActionListener(aboutClick);
-            
+
             JMenuItem menuItemGuide = new JMenuItem("User Guide");
             menuItemGuide.addActionListener(userGuideClick);
 
@@ -203,7 +207,7 @@ public class GUI {
 
     // The 'Add Entry' window
     private class AddEntryGUI extends JFrame {
-        //declaring the input textfields to capture input with listeners
+        // declaring the input textfields to capture input with listeners
         JTextField authorTextField;
         JTextField titleTextField;
         JTextField publishYearTextField;
@@ -264,21 +268,21 @@ public class GUI {
             JLabel genreLabel = new JLabel("Genre:");
             genreLabel.setPreferredSize(new Dimension(90, 28));
             genreLabel.setVerticalAlignment(SwingConstants.CENTER);
-            String[] genres = {"Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", "Horror", "Romance", "Sci-Fi"};
+            String[] genres = { "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", "Horror",
+                    "Romance", "Sci-Fi" };
             genreDropdown = new JComboBox<>(genres);
             genreDropdown.setPreferredSize(new Dimension(275, 28));
             genreDropdown.setBackground(Color.WHITE);
 
-
             // Create the Browse button, label, and textfield
             JLabel selectDocLabel = new JLabel("Select document to parse:");
             selectDocLabel.setPreferredSize(new Dimension(365, 28));
-            
+
             browseTextField = new JTextField();
             browseTextField.setPreferredSize(new Dimension(265, 28));
             browseTextField.setEditable(false);
             browseTextField.setBackground(Color.WHITE);
-            
+
             JButton browseButton = new JButton("Browse");
             browseButton.setPreferredSize(new Dimension(100, 28));
             browseButton.addActionListener(browseClick);
@@ -287,7 +291,7 @@ public class GUI {
             JButton parseButton = new JButton("Parse");
             parseButton.setPreferredSize(new Dimension(100, 28));
             parseButton.addActionListener(parseClick);
-            
+
             // Add components to the panels
             labelsPanel.add(authorLabel);
             labelsPanel.add(titleLabel);
@@ -317,14 +321,14 @@ public class GUI {
             System.out.println("You clicked the add entry window Browse Button!");
 
             try {
-                String filePath ="";
-    		
+                String filePath = "";
+
                 JFrame jf = new JFrame("Dialog");
                 jf.setAlwaysOnTop(true);
-                
+
                 JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
                 int returnValue = jfc.showOpenDialog(jf);
-    		
+
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     filePath = jfc.getSelectedFile().getAbsolutePath();
                     browseTextField.setText(filePath);
@@ -340,8 +344,37 @@ public class GUI {
 
         private final ActionListener parseClick = event -> { // File > Add Entry
             System.out.println("You clicked the add entry window Parse Button!");
-            ParserPrototype parser = new ParserPrototype(authorTextField.getText(), titleTextField.getText(), publishYearTextField.getText(), (String)genreDropdown.getSelectedItem());
+            ParserPrototype parser = new ParserPrototype();
             parser.parseDoc(file);
+            int published;
+
+            String author = authorTextField.getText();
+            String title = titleTextField.getText();
+            String genre = (String) genreDropdown.getSelectedItem();
+            if (publishYearTextField.getText().toUpperCase().equals("UNKNOWN")) {
+                published = 0000;
+            } else {
+                published = Integer.parseInt(publishYearTextField.getText());
+            }
+            double wordCount = parser.getWordCount(); // Number of words
+            double distinctWordsCount = parser.getDistinctWordsCount(); // Number of distinct words
+            double punctuationCount = parser.getPunctuationCount(); // Number of punctuation marks total
+            double sentenceCount = parser.getSentenceCount(); // Number of sentences (counts . ! ?)
+            double syllableCount = parser.getSyllableCount(); // Number of syllables
+            double fleschScore = parser.getFleschScore(); // Flesch Reading Ease Score
+            double avgWordsPerSentence = parser.getAvgWordsPerSentence(); // Average words per sentence
+            double avgSyllablesPerWord = parser.getAvgSyllablesPerWord(); // Average syllables per words
+            double avgWordLength = parser.getAvgWordLength(); // Average word length
+            String wordsHash = parser.getWordHash();
+            String punctuationHash = parser.getPunctuationHash();
+
+
+            // insert entry in table
+            db.insert(author, title, published, genre, wordCount,
+                    sentenceCount, avgWordLength, avgWordsPerSentence,
+                    punctuationCount, fleschScore, syllableCount, avgSyllablesPerWord, distinctWordsCount, wordsHash,
+                    punctuationHash);
+
         };
     }
 
@@ -368,7 +401,7 @@ public class GUI {
             JLabel recordsDropdownLabel = new JLabel("Select a record to delete:");
 
             // Create the records dropdown menu
-            String[] records = {"Test Option 1", "Test Option 2", "Test Option 3"};
+            String[] records = { "Test Option 1", "Test Option 2", "Test Option 3" };
             JComboBox<String> recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
@@ -420,7 +453,7 @@ public class GUI {
 
             // Create the dropdown menu
             // array 'options' will need to be populated with database records
-            String[] records = {"Test Option 1", "Test Option 2", "Test Option 3"};
+            String[] records = { "Test Option 1", "Test Option 2", "Test Option 3" };
             JComboBox<String> recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
@@ -438,14 +471,15 @@ public class GUI {
             JButton displayButton = new JButton("Display");
             displayButton.setPreferredSize(new Dimension(100, 28));
             displayButton.addActionListener(displayClick);
-            
+
             // Create the display area for data
             JTextArea displayArea = new JTextArea(8, 40);
             displayArea.setEditable(false);
             displayArea.setLineWrap(true);
             displayArea.setWrapStyleWord(true);
             displayArea.setBorder(BorderFactory.createLoweredBevelBorder());
-            JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a scroll bar
+            JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a
+                                                                   // scroll bar
 
             // Add components to the panels
             inputPanel.add(recordsDropdownLabel);
@@ -453,7 +487,7 @@ public class GUI {
             inputPanel.add(wordSearchLabel);
             inputPanel.add(wordSearchTextField);
             buttonPanel.add(displayButton);
-            outputPanel.add(scrollPane); //<--- The display area (within the scroll pane)
+            outputPanel.add(scrollPane); // <--- The display area (within the scroll pane)
 
             add(inputPanel); // Add panels to the window
             add(buttonPanel);
@@ -503,7 +537,7 @@ public class GUI {
             JLabel viewLabel = new JLabel("VIEW:");
             viewLabel.setPreferredSize(new Dimension(90, 28));
             viewLabel.setVerticalAlignment(SwingConstants.CENTER);
-            String[] viewOptions = {"Average", "Total", "Min/Max"};
+            String[] viewOptions = { "Average", "Total", "Min/Max" };
             JComboBox<String> viewDropdown = new JComboBox<>(viewOptions);
             viewDropdown.setPreferredSize(new Dimension(275, 28));
             viewDropdown.setBackground(Color.WHITE);
@@ -512,7 +546,9 @@ public class GUI {
             JLabel ofLabel = new JLabel("OF:");
             ofLabel.setPreferredSize(new Dimension(90, 28));
             ofLabel.setVerticalAlignment(SwingConstants.CENTER);
-            String[] ofOptions = {"Word Count", "Distinct Word Count", "Punctuation Count", "Sentence Count", "Syllable Count", "Flesch Reading Ease Score", "Average Words Per Sentence", "Average Syllables Per Word", "Average Word Length"};
+            String[] ofOptions = { "Word Count", "Distinct Word Count", "Punctuation Count", "Sentence Count",
+                    "Syllable Count", "Flesch Reading Ease Score", "Average Words Per Sentence",
+                    "Average Syllables Per Word", "Average Word Length" };
             JComboBox<String> ofDropdown = new JComboBox<>(ofOptions);
             ofDropdown.setPreferredSize(new Dimension(275, 28));
             ofDropdown.setBackground(Color.WHITE);
@@ -521,7 +557,7 @@ public class GUI {
             JLabel whereLabel = new JLabel("WHERE:");
             whereLabel.setPreferredSize(new Dimension(90, 28));
             whereLabel.setVerticalAlignment(SwingConstants.CENTER);
-            String[] whereOptions = {"Author", "Title", "Publish Year", "Genre"};
+            String[] whereOptions = { "Author", "Title", "Publish Year", "Genre" };
             JComboBox<String> whereDropdown = new JComboBox<>(whereOptions);
             whereDropdown.setPreferredSize(new Dimension(275, 28));
             whereDropdown.setBackground(Color.WHITE);
@@ -545,7 +581,8 @@ public class GUI {
             displayArea.setLineWrap(true);
             displayArea.setWrapStyleWord(true);
             displayArea.setBorder(BorderFactory.createLoweredBevelBorder());
-            JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a scroll bar
+            JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a
+                                                                   // scroll bar
 
             // Add components to the panels
             labelsPanel.add(viewLabel);
@@ -586,26 +623,26 @@ public class GUI {
             setLayout(new GridLayout(1, 1));
             setResizable(false);
 
-            String aboutText =
-                "<html><style>html {margin:8px;}</style><h2>About the Project</h2>" + 
-                "<p>The Text Document Analyzer was developed in the Fall semester by Group 4 for their " +
-                "CMSC 495 Capstone Experience course at UMGC. Team members included:</p>" +
-                "<ul>" +
-                "<li>Laura McBride (Project Manager)</li>" + 
-                "<li>Jason Howarth (Test Manager)</li>" +
-                "<li>John McGuire (Technical Writer & Requirements Manager)</li>" +
-                "<li>Noah Gray (Software Developer)</li>" +
-                "<li>Daniel Nester (Software Developer)</li>" +
-                "</ul>" +
-                "<p>The software was designed to parse literary documents and collect quantitative metrics " +
-                "that would be useful for literary analysis. Development took place over 8 weeks.</p></html>";
+            String aboutText = "<html><style>html {margin:8px;}</style><h2>About the Project</h2>" +
+                    "<p>The Text Document Analyzer was developed in the Fall semester by Group 4 for their " +
+                    "CMSC 495 Capstone Experience course at UMGC. Team members included:</p>" +
+                    "<ul>" +
+                    "<li>Laura McBride (Project Manager)</li>" +
+                    "<li>Jason Howarth (Test Manager)</li>" +
+                    "<li>John McGuire (Technical Writer & Requirements Manager)</li>" +
+                    "<li>Noah Gray (Software Developer)</li>" +
+                    "<li>Daniel Nester (Software Developer)</li>" +
+                    "</ul>" +
+                    "<p>The software was designed to parse literary documents and collect quantitative metrics " +
+                    "that would be useful for literary analysis. Development took place over 8 weeks.</p></html>";
 
             JEditorPane aboutTextArea = new JEditorPane("text/html", aboutText);
             aboutTextArea.setEditable(false);
             aboutTextArea.setCaretPosition(0);
-            JScrollPane scrollPane = new JScrollPane(aboutTextArea); // Add text area to scroll pane so it can have a scroll bar
+            JScrollPane scrollPane = new JScrollPane(aboutTextArea); // Add text area to scroll pane so it can have a
+                                                                     // scroll bar
 
-            add(scrollPane); //<--- Scroll pane contains User Guide text area
+            add(scrollPane); // <--- Scroll pane contains User Guide text area
         }
     }
 
@@ -621,116 +658,136 @@ public class GUI {
             setMinimumSize(new Dimension(500, 400));
 
             String userGuideText = "<html><style>html {margin:24px 48px;}</style>" +
-            "<h2>TEXT DOCUMENT ANALYZER USER GUIDE</h2>" +
-            "<p>The Text Document Analyzer is a stand alone application for parsing literary documents " +
-            "and extracting statistical and mathematical metrics from the written work. Extracted data " +
-            "is stored in an integrated database so that it may be recalled at the user's convenience. " +
-            "Data records can be added to the database, deleted from the database, or displayed using " +
-            "the GUI's menus and controls.</p>" +
-            "<h3>DATABASE RECORD</h3>" +
-            "<p>Records in the database consist of metadata entered by the user and metrics generated when " +
-            "a document is parsed by the application. Each record correlates to a single literary document " +
-            "that has been parsed by the application. Records can be added and deleted by the user through " +
-            "the use of the application's menu system.</p>" +
-            "<p>Metadata fields stored in a record include:</p>" +
-            "<ul>" +
-            "<li>Author</li>" +
-            "<li>Title</li>" +
-            "<li>Year published</li>" +
-            "<li>Genre</li>" +
-            "</ul>" +
-            "<p>Metrics fields stored in a record include:</p>" +
-            "<ul>" +
-            "<li>Word Count</li>" +
-            "<li>Distinct Word Count</li>" +
-            "<li>Punctuation Count</li>" +
-            "<li>Sentence Count</li>" +
-            "<li>Syllable Count</li>" +
-            "<li>Average Word Length</li>" +
-            "<li>Average Syllables Per Word</li>" +
-            "<li>Average Sentence Length</li>" +
-            "<li>Distinct Words List</li>" +
-            "<li>Distinct Punctuation List</li>" +
-            "<li>Flesch Reading Ease Score</li>" +
-            "</ul>" +
-            "<h3>HOW TO: UPLOAD TEXT DOCUMENT FOR ANALYSIS</h3>" +
-            "<p>Uploading a text document for analysis can be done using the applications menu system and " +
-            "input components. Documents uploaded will be parsed by the application for metrics and all  " +
-            "calculated data will be stored in the application database.</p>" +
-            "<ol>" +
-            "<li>Select File > Add Entry from the application's top menu. A new window will appear where you may " +
-            "browse for a file and enter metadata about the document.</li>" +
-            "<li>Enter the Title, Author, Year Published, and Genre.</li>" +
-            "<li>Click the Browse button.</li>" +
-            "<li>Locate and select the document you would like to parse.</li>" +
-            "<li>Click OK.</li>" +
-            "<li>Click the Parse button.</li>" +
-            "<li>Allow the application time to parse the document.</li>" +
-            "</ol>" +
-            "<h3>HOW TO: DELETE AN ENTRY FROM THE DATABASE</h3>" +
-            "<p>Deleting an entry from the database can be done using the application's top menu. Entries must be " +
-            "deleted one at a time. Entries deleted from the database cannot be recovered and must be recreated by " +
-            "reparsing the original text document.</p>" +
-            "<ol>" +
-            "<li>Select File > Delete Entry from the application's menu.</li>" +
-            "<li>Use the dropdown menu to select the document record you would like to delete.</li>" +
-            "<li>Select the Delete button.</li>" +
-            "<li>Allow the application time to delete the database entry.</li>" +
-            "</ol>" +
-            "<h3>HOW TO: VIEW ANALYZED DOCUMENT'S METRICS</h3>" +
-            "<p>After parsing a text document, data can be retrieved from the database and displayed in the application's " +
-            "display panel. All metadata and metrics stored in the document's database record will be displayed.</p>" +
-            "<ol>" +
-            "<li>Use the dropdown menu to select the document you would like to view.</li>" +
-            "<li>Click the Display button.</li>" +
-            "<li>The metrics will appear in the display panel at the bottom of the window.</li>" +
-            "</ol>" +
-            "<h3>HOW TO: QUERY THE DATABASE</h3>" +
-            "<p>The Text Document Analyzer can also be used to perform more advanced queries on the literary data stored " +
-            "in the database. Though this information is not stored in a single database record, the application can aggregate " +
-            "data from multiple records sharing a common field. For example, using the Query Database window a user can ask for " +
-            "the average word count of all records where the author is Edgar Allan Poe.</p>" +
-            "<ol>" +
-            "<li>Click File > Query Database in the application's top menu.</li>" +
-            "<li>Use the dropdown menus and the textbox to construct your query.</li>" +
-            "<li>Click the Display button.</li>" +
-            "<li>The results will appear in the display panel at the bottom of the window.</li>" +
-            "</ol>" +
-            "<p>Statistical and mathematical values such as Average, Total, and Min/Max can be selected using the VIEW " +
-            "dropdown menu. Metrics such as Word Count and Average Word Length can be selected using the OF dropdown. " +
-            "Criteria such as Author or Genre can be selected using the WHERE dropdown. The EQUALS textbox allows the " +
-            "user to enter a custom value corresponding to the WHERE dropdown option, such as the value Edgar Allan Poe " +
-            "for the Author option or Comedy for the Genre option.</p>" +
-            "<h3>HOW TO: SEARCH FOR DISTINCT WORDS</h3>" +
-            "<p>Once a document has been parsed, The Text Document Analyzer stores a list of every distinct word used " +
-            "in the document, as well as how many times each word was used. The Search Distinct Words window can be used " +
-            "to view this information. This functionality can be used to determine how many times the word \"love\" appears " +
-            "in Shakespeare's play \"Much Ado About Nothing\".</p>" +
-            "<ol>" +
-            "<li>Select File > Search Distinct Words from the application's top menu.</li>" +
-            "<li>Use the dropdown menu to select a record to search.</li>" +
-            "<li>Enter a word to search for into the textfield.</li>" +
-            "<li>Click the Display button.</li>" +
-            "<li>The results will appear in the display panel at the bottom of the window.</li>" +
-            "</ol>" +
-            "<h3>HOW TO: LEARN ABOUT THE PROJECT</h3>" +
-            "<p>Information about the project is available if you would like to learn more about the application's development " +
-            "team and the creation of the Text Document Analyzer.</p>" +
-            "<ol>" +
-            "<li>Select About > About Text Document Analyzer from the application's top menu.</li>" +
-            "<li>Read about the project in the new window.</li>" +
-            "</ol>";
+                    "<h2>TEXT DOCUMENT ANALYZER USER GUIDE</h2>" +
+                    "<p>The Text Document Analyzer is a stand alone application for parsing literary documents " +
+                    "and extracting statistical and mathematical metrics from the written work. Extracted data " +
+                    "is stored in an integrated database so that it may be recalled at the user's convenience. " +
+                    "Data records can be added to the database, deleted from the database, or displayed using " +
+                    "the GUI's menus and controls.</p>" +
+                    "<h3>DATABASE RECORD</h3>" +
+                    "<p>Records in the database consist of metadata entered by the user and metrics generated when " +
+                    "a document is parsed by the application. Each record correlates to a single literary document " +
+                    "that has been parsed by the application. Records can be added and deleted by the user through " +
+                    "the use of the application's menu system.</p>" +
+                    "<p>Metadata fields stored in a record include:</p>" +
+                    "<ul>" +
+                    "<li>Author</li>" +
+                    "<li>Title</li>" +
+                    "<li>Year published</li>" +
+                    "<li>Genre</li>" +
+                    "</ul>" +
+                    "<p>Metrics fields stored in a record include:</p>" +
+                    "<ul>" +
+                    "<li>Word Count</li>" +
+                    "<li>Distinct Word Count</li>" +
+                    "<li>Punctuation Count</li>" +
+                    "<li>Sentence Count</li>" +
+                    "<li>Syllable Count</li>" +
+                    "<li>Average Word Length</li>" +
+                    "<li>Average Syllables Per Word</li>" +
+                    "<li>Average Sentence Length</li>" +
+                    "<li>Distinct Words List</li>" +
+                    "<li>Distinct Punctuation List</li>" +
+                    "<li>Flesch Reading Ease Score</li>" +
+                    "</ul>" +
+                    "<h3>HOW TO: UPLOAD TEXT DOCUMENT FOR ANALYSIS</h3>" +
+                    "<p>Uploading a text document for analysis can be done using the applications menu system and " +
+                    "input components. Documents uploaded will be parsed by the application for metrics and all  " +
+                    "calculated data will be stored in the application database.</p>" +
+                    "<ol>" +
+                    "<li>Select File > Add Entry from the application's top menu. A new window will appear where you may "
+                    +
+                    "browse for a file and enter metadata about the document.</li>" +
+                    "<li>Enter the Title, Author, Year Published, and Genre.</li>" +
+                    "<li>Click the Browse button.</li>" +
+                    "<li>Locate and select the document you would like to parse.</li>" +
+                    "<li>Click OK.</li>" +
+                    "<li>Click the Parse button.</li>" +
+                    "<li>Allow the application time to parse the document.</li>" +
+                    "</ol>" +
+                    "<h3>HOW TO: DELETE AN ENTRY FROM THE DATABASE</h3>" +
+                    "<p>Deleting an entry from the database can be done using the application's top menu. Entries must be "
+                    +
+                    "deleted one at a time. Entries deleted from the database cannot be recovered and must be recreated by "
+                    +
+                    "reparsing the original text document.</p>" +
+                    "<ol>" +
+                    "<li>Select File > Delete Entry from the application's menu.</li>" +
+                    "<li>Use the dropdown menu to select the document record you would like to delete.</li>" +
+                    "<li>Select the Delete button.</li>" +
+                    "<li>Allow the application time to delete the database entry.</li>" +
+                    "</ol>" +
+                    "<h3>HOW TO: VIEW ANALYZED DOCUMENT'S METRICS</h3>" +
+                    "<p>After parsing a text document, data can be retrieved from the database and displayed in the application's "
+                    +
+                    "display panel. All metadata and metrics stored in the document's database record will be displayed.</p>"
+                    +
+                    "<ol>" +
+                    "<li>Use the dropdown menu to select the document you would like to view.</li>" +
+                    "<li>Click the Display button.</li>" +
+                    "<li>The metrics will appear in the display panel at the bottom of the window.</li>" +
+                    "</ol>" +
+                    "<h3>HOW TO: QUERY THE DATABASE</h3>" +
+                    "<p>The Text Document Analyzer can also be used to perform more advanced queries on the literary data stored "
+                    +
+                    "in the database. Though this information is not stored in a single database record, the application can aggregate "
+                    +
+                    "data from multiple records sharing a common field. For example, using the Query Database window a user can ask for "
+                    +
+                    "the average word count of all records where the author is Edgar Allan Poe.</p>" +
+                    "<ol>" +
+                    "<li>Click File > Query Database in the application's top menu.</li>" +
+                    "<li>Use the dropdown menus and the textbox to construct your query.</li>" +
+                    "<li>Click the Display button.</li>" +
+                    "<li>The results will appear in the display panel at the bottom of the window.</li>" +
+                    "</ol>" +
+                    "<p>Statistical and mathematical values such as Average, Total, and Min/Max can be selected using the VIEW "
+                    +
+                    "dropdown menu. Metrics such as Word Count and Average Word Length can be selected using the OF dropdown. "
+                    +
+                    "Criteria such as Author or Genre can be selected using the WHERE dropdown. The EQUALS textbox allows the "
+                    +
+                    "user to enter a custom value corresponding to the WHERE dropdown option, such as the value Edgar Allan Poe "
+                    +
+                    "for the Author option or Comedy for the Genre option.</p>" +
+                    "<h3>HOW TO: SEARCH FOR DISTINCT WORDS</h3>" +
+                    "<p>Once a document has been parsed, The Text Document Analyzer stores a list of every distinct word used "
+                    +
+                    "in the document, as well as how many times each word was used. The Search Distinct Words window can be used "
+                    +
+                    "to view this information. This functionality can be used to determine how many times the word \"love\" appears "
+                    +
+                    "in Shakespeare's play \"Much Ado About Nothing\".</p>" +
+                    "<ol>" +
+                    "<li>Select File > Search Distinct Words from the application's top menu.</li>" +
+                    "<li>Use the dropdown menu to select a record to search.</li>" +
+                    "<li>Enter a word to search for into the textfield.</li>" +
+                    "<li>Click the Display button.</li>" +
+                    "<li>The results will appear in the display panel at the bottom of the window.</li>" +
+                    "</ol>" +
+                    "<h3>HOW TO: LEARN ABOUT THE PROJECT</h3>" +
+                    "<p>Information about the project is available if you would like to learn more about the application's development "
+                    +
+                    "team and the creation of the Text Document Analyzer.</p>" +
+                    "<ol>" +
+                    "<li>Select About > About Text Document Analyzer from the application's top menu.</li>" +
+                    "<li>Read about the project in the new window.</li>" +
+                    "</ol>";
 
             JEditorPane userGuideTextArea = new JEditorPane("text/html", userGuideText);
             userGuideTextArea.setEditable(false);
             userGuideTextArea.setCaretPosition(0);
-            JScrollPane scrollPane = new JScrollPane(userGuideTextArea); // Add text area to scroll pane so it can have a scroll bar
+            JScrollPane scrollPane = new JScrollPane(userGuideTextArea); // Add text area to scroll pane so it can have
+                                                                         // a scroll bar
 
-            add(scrollPane); //<--- Scroll pane contains User Guide text area
+            add(scrollPane); // <--- Scroll pane contains User Guide text area
         }
     }
 
     public static void main(String[] args) {
+        db = new Database();
+        db.createNewDatabase("ParsedDocumentsData.db");
+        db.createNewTable();
         GUI gui = new GUI();
         JFrame mainWindow = gui.getMainWindow();
         mainWindow.setVisible(true);
