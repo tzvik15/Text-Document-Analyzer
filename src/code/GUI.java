@@ -254,13 +254,14 @@ public class GUI {
             authorLabel.setVerticalAlignment(SwingConstants.CENTER);
             authorTextField = new JTextField();
             authorTextField.setPreferredSize(new Dimension(275, 28));
-            authorTextField.getDocument().addDocumentListener(change);
+            authorTextField.addFocusListener(focus);
 
             JLabel titleLabel = new JLabel("Title:");
             titleLabel.setPreferredSize(new Dimension(90, 28));
             titleLabel.setVerticalAlignment(SwingConstants.CENTER);
             titleTextField = new JTextField();
             titleTextField.setPreferredSize(new Dimension(275, 28));
+            titleTextField.addFocusListener(focus);
 
             JLabel publishYearLabel = new JLabel("Publish Year:");
             publishYearLabel.setPreferredSize(new Dimension(90, 28));
@@ -276,6 +277,7 @@ public class GUI {
             genreDropdown = new JComboBox<>(genres);
             genreDropdown.setPreferredSize(new Dimension(275, 28));
             genreDropdown.setBackground(Color.WHITE);
+            genreDropdown.addFocusListener(focus);
 
             // Create the Browse button, label, and textfield
             JLabel selectDocLabel = new JLabel("Select document to parse:");
@@ -285,6 +287,7 @@ public class GUI {
             browseTextField.setPreferredSize(new Dimension(265, 28));
             browseTextField.setEditable(false);
             browseTextField.setBackground(Color.WHITE);
+            browseTextField.addFocusListener(focus);
 
             JButton browseButton = new JButton("Browse");
             browseButton.setPreferredSize(new Dimension(100, 28));
@@ -321,7 +324,7 @@ public class GUI {
         }
 
         private final ActionListener browseClick = event -> { // File > Add Entry
-            System.out.println("You clicked the add entry window Browse Button!");
+            browseTextField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
 
             try {
                 String filePath = "";
@@ -345,55 +348,70 @@ public class GUI {
             }
         };
 
-        private final DocumentListener change = new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                Border blackBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
-                JTextField field = (JTextField)e.getDocument();
-                field.setBorder(blackBorder);
-            }
-            public void removeUpdate(DocumentEvent e) {};
-            public void insertUpdate(DocumentEvent e) {};
-            
-        };
-
         private final ActionListener parseClick = event -> { // File > Add Entry
-            System.out.println("You clicked the add entry window Parse Button!");
-            ParserPrototype parser = new ParserPrototype();
-            parser.parseDoc(file);
-            int published;
+            Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
 
-            String author = authorTextField.getText();
-            String title = titleTextField.getText();
-            String genre = (String) genreDropdown.getSelectedItem();
-            if (publishYearTextField.getText().toUpperCase().equals("UNKNOWN")) {
-                published = 0000;
+            if (authorTextField.getText().isEmpty()) {
+                authorTextField.setBorder(redBorder);
+            } else if (titleTextField.getText().isEmpty()) {
+                titleTextField.setBorder(redBorder);
+            } else if ((String)genreDropdown.getSelectedItem() == "") {
+                genreDropdown.setBorder(redBorder);
+            } else if (browseTextField.getText().isEmpty()) {
+                browseTextField.setBorder(redBorder);
             } else {
-                published = Integer.parseInt(publishYearTextField.getText());
+                ParserPrototype parser = new ParserPrototype();
+                boolean success = parser.parseDoc(file);
+
+                if (success) {
+                    // Get all the field values
+                    String author = authorTextField.getText();
+                    String title = titleTextField.getText();
+                    String genre = (String)genreDropdown.getSelectedItem();
+
+                    int published;
+                    
+                    if (publishYearTextField.getText().isEmpty()) {
+                        published = 0000;
+                    } else {
+                        published = Integer.parseInt(publishYearTextField.getText());
+                    }
+
+                    // Get all the parsed data
+                    double wordCount = parser.getWordCount(); // Number of words
+                    double distinctWordsCount = parser.getDistinctWordsCount(); // Number of distinct words
+                    double punctuationCount = parser.getPunctuationCount(); // Number of punctuation marks total
+                    double sentenceCount = parser.getSentenceCount(); // Number of sentences (counts . ! ?)
+                    double syllableCount = parser.getSyllableCount(); // Number of syllables
+                    double fleschScore = parser.getFleschScore(); // Flesch Reading Ease Score
+                    double avgWordsPerSentence = parser.getAvgWordsPerSentence(); // Average words per sentence
+                    double avgSyllablesPerWord = parser.getAvgSyllablesPerWord(); // Average syllables per words
+                    double avgWordLength = parser.getAvgWordLength(); // Average word length
+                    String wordsHash = parser.getWordHash();
+                    String punctuationHash = parser.getPunctuationHash();
+
+                    // insert entry in table
+                    db.insert(author, title, published, genre, wordCount,
+                            sentenceCount, avgWordLength, avgWordsPerSentence,
+                            punctuationCount, fleschScore, syllableCount, avgSyllablesPerWord, distinctWordsCount, wordsHash,
+                            punctuationHash);
+
+                    authorTextField.setText("");
+                    titleTextField.setText("");
+                    publishYearTextField.setText("");
+                    genreDropdown.setSelectedIndex(0);
+                    browseTextField.setText("");
+                    JOptionPane.showMessageDialog(null, "File was parsed successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Could not parse file.");
+                }
             }
-            double wordCount = parser.getWordCount(); // Number of words
-            double distinctWordsCount = parser.getDistinctWordsCount(); // Number of distinct words
-            double punctuationCount = parser.getPunctuationCount(); // Number of punctuation marks total
-            double sentenceCount = parser.getSentenceCount(); // Number of sentences (counts . ! ?)
-            double syllableCount = parser.getSyllableCount(); // Number of syllables
-            double fleschScore = parser.getFleschScore(); // Flesch Reading Ease Score
-            double avgWordsPerSentence = parser.getAvgWordsPerSentence(); // Average words per sentence
-            double avgSyllablesPerWord = parser.getAvgSyllablesPerWord(); // Average syllables per words
-            double avgWordLength = parser.getAvgWordLength(); // Average word length
-            String wordsHash = parser.getWordHash();
-            String punctuationHash = parser.getPunctuationHash();
-
-
-            // insert entry in table
-            db.insert(author, title, published, genre, wordCount,
-                    sentenceCount, avgWordLength, avgWordsPerSentence,
-                    punctuationCount, fleschScore, syllableCount, avgSyllablesPerWord, distinctWordsCount, wordsHash,
-                    punctuationHash);
-
         };
     }
 
     // The 'Delete Entry' window
     private class DeleteEntryGUI extends JFrame {
+        JComboBox<String> recordsDropdown;
         JPanel inputPanel = new JPanel();
         JPanel deletePanel = new JPanel();
 
@@ -416,9 +434,10 @@ public class GUI {
 
             // Create the records dropdown menu
             String[] records = { "Test Option 1", "Test Option 2", "Test Option 3" };
-            JComboBox<String> recordsDropdown = new JComboBox<>(records);
+            recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
+            recordsDropdown.addFocusListener(focus);
 
             // Create the Delete button
             JButton deleteButton = new JButton("Delete");
@@ -435,12 +454,34 @@ public class GUI {
 
         // Delete button Action Listener
         private final ActionListener deleteClick = event -> { // File > Query Database
-            System.out.println("You clicked the delete entry window Delete Button!");
+            if (recordsDropdown.getSelectedItem() == "") {
+                Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+                recordsDropdown.setBorder(redBorder);
+            } else {
+                int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?", "Alert!", JOptionPane.YES_NO_OPTION);
+                if (confirmation == 0) {
+                    System.out.println("You chose YES!");
+
+                    // Value of the record dropdown as a string
+                    String recordStr = (String)recordsDropdown.getSelectedItem();
+                    recordsDropdown.setSelectedIndex(0);
+                    recordsDropdown.removeItem(recordStr);
+
+                    ////////////////////////////////////////////////////////////////////
+                    ///////// CALL DELETE RECORD HERE //////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////
+                } else {
+                    System.out.println("You chose NO!");
+                }
+            }
         };
     }
 
     // The 'Search Distinct Words' window
     private class SearchGUI extends JFrame {
+        JComboBox<String> recordsDropdown;
+        JTextField wordSearchTextField;
+
         // Create the panels to hold groups of components
         JPanel inputPanel = new JPanel();
         JPanel buttonPanel = new JPanel();
@@ -468,18 +509,20 @@ public class GUI {
             // Create the dropdown menu
             // array 'options' will need to be populated with database records
             String[] records = { "Test Option 1", "Test Option 2", "Test Option 3" };
-            JComboBox<String> recordsDropdown = new JComboBox<>(records);
+            recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
+            recordsDropdown.addFocusListener(focus);
 
             // Create a label for the dropdown menu
             JLabel wordSearchLabel = new JLabel("Enter a word to search for:");
 
             // Create the dropdown menu
             // array 'options' will need to be populated with database records
-            JTextField wordSearchTextField = new JTextField();
+            wordSearchTextField = new JTextField();
             wordSearchTextField.setPreferredSize(new Dimension(365, 28));
             wordSearchTextField.setBackground(Color.WHITE);
+            wordSearchTextField.addFocusListener(focus);
 
             // Create the Display button
             JButton displayButton = new JButton("Display");
@@ -510,12 +553,31 @@ public class GUI {
 
         // Display button Action Listener
         private final ActionListener displayClick = event -> { // File > Query Database
-            System.out.println("You clicked the search window Display Button!");
+            Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+
+            if (recordsDropdown.getSelectedItem() == "") {
+                recordsDropdown.setBorder(redBorder);
+            } else if (wordSearchTextField.getText().isEmpty()) {
+                wordSearchTextField.setBorder(redBorder);
+            } else {
+                // Value of the record dropdown as a string
+                String recordStr = (String)recordsDropdown.getSelectedItem();
+                String word = wordSearchTextField.getText();
+
+                    ////////////////////////////////////////////////////////////////////
+                    ///////// CALL SEARCH RECORD HERE //////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////
+            }
         };
     }
 
     // The 'Query Database' window
     private class QueryGUI extends JFrame {
+        JComboBox<String> viewDropdown;
+        JComboBox<String> ofDropdown;
+        JComboBox<String> whereDropdown;
+        JTextField equalsTextfield;
+
         // Create the panels to hold groups of components
         JPanel inputPanel = new JPanel();
         JPanel buttonPanel = new JPanel();
@@ -552,9 +614,10 @@ public class GUI {
             viewLabel.setPreferredSize(new Dimension(90, 28));
             viewLabel.setVerticalAlignment(SwingConstants.CENTER);
             String[] viewOptions = { "Average", "Total", "Min/Max" };
-            JComboBox<String> viewDropdown = new JComboBox<>(viewOptions);
+            viewDropdown = new JComboBox<>(viewOptions);
             viewDropdown.setPreferredSize(new Dimension(275, 28));
             viewDropdown.setBackground(Color.WHITE);
+            viewDropdown.addFocusListener(focus);
 
             // Create the Genre dropdown menu and label for the input panel
             JLabel ofLabel = new JLabel("OF:");
@@ -563,26 +626,29 @@ public class GUI {
             String[] ofOptions = { "Word Count", "Distinct Word Count", "Punctuation Count", "Sentence Count",
                     "Syllable Count", "Flesch Reading Ease Score", "Average Words Per Sentence",
                     "Average Syllables Per Word", "Average Word Length" };
-            JComboBox<String> ofDropdown = new JComboBox<>(ofOptions);
+            ofDropdown = new JComboBox<>(ofOptions);
             ofDropdown.setPreferredSize(new Dimension(275, 28));
             ofDropdown.setBackground(Color.WHITE);
+            ofDropdown.addFocusListener(focus);
 
             // Create the Genre dropdown menu and label for the input panel
             JLabel whereLabel = new JLabel("WHERE:");
             whereLabel.setPreferredSize(new Dimension(90, 28));
             whereLabel.setVerticalAlignment(SwingConstants.CENTER);
             String[] whereOptions = { "Author", "Title", "Publish Year", "Genre" };
-            JComboBox<String> whereDropdown = new JComboBox<>(whereOptions);
+            whereDropdown = new JComboBox<>(whereOptions);
             whereDropdown.setPreferredSize(new Dimension(275, 28));
             whereDropdown.setBackground(Color.WHITE);
+            whereDropdown.addFocusListener(focus);
 
             // Create the Genre dropdown menu and label for the input panel
             JLabel equalsLabel = new JLabel("EQUALS:");
             equalsLabel.setPreferredSize(new Dimension(90, 28));
             equalsLabel.setVerticalAlignment(SwingConstants.CENTER);
-            JTextField equalsTextfield = new JTextField();
+            equalsTextfield = new JTextField();
             equalsTextfield.setPreferredSize(new Dimension(275, 28));
             equalsTextfield.setBackground(Color.WHITE);
+            equalsTextfield.addFocusListener(focus);
 
             // Create the Parse button
             JButton displayButton = new JButton("Display");
@@ -622,7 +688,27 @@ public class GUI {
         }
 
         private final ActionListener displayClick = event -> { // File > Add Entry
-            System.out.println("You clicked the query window Display Button!");
+            Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+
+            if (viewDropdown.getSelectedItem() == "") {
+                viewDropdown.setBorder(redBorder);
+            } else if (ofDropdown.getSelectedItem() == "") {
+                ofDropdown.setBorder(redBorder);
+            } else if (whereDropdown.getSelectedItem() == "") {
+                whereDropdown.setBorder(redBorder);
+            } else if (equalsTextfield.getText().isEmpty()) {
+                equalsTextfield.setBorder(redBorder);
+            } else {
+                // Get values of fields as strings
+                String view = (String)viewDropdown.getSelectedItem();
+                String of = (String)ofDropdown.getSelectedItem();
+                String where = (String)whereDropdown.getSelectedItem();
+                String equals = equalsTextfield.getText();
+
+                    ////////////////////////////////////////////////////////////////////
+                    ///////// CALL QUERY RECORD HERE ///////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////
+            }
         };
     }
 
@@ -797,4 +883,14 @@ public class GUI {
             add(scrollPane); // <--- Scroll pane contains User Guide text area
         }
     }
+
+    // A focus listener to remove the red border from required fields when they gain focus
+    private final FocusListener focus = new FocusListener() {
+        public void focusGained(FocusEvent e) {
+            JComponent field = (JComponent)e.getComponent();
+            Border defaultBorder = UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border");
+            field.setBorder(defaultBorder);
+        }
+        public void focusLost(FocusEvent e) { };
+    };
 }
