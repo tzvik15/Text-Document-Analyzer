@@ -1,6 +1,7 @@
 package code;
 
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
@@ -19,6 +20,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 public class GUI {
     AddEntryGUI addEntryWindow; // Instantiate objects for each window.
@@ -251,6 +254,7 @@ public class GUI {
             authorLabel.setVerticalAlignment(SwingConstants.CENTER);
             authorTextField = new JTextField();
             authorTextField.setPreferredSize(new Dimension(275, 28));
+            authorTextField.getDocument().addDocumentListener(change);
 
             JLabel titleLabel = new JLabel("Title:");
             titleLabel.setPreferredSize(new Dimension(90, 28));
@@ -268,8 +272,7 @@ public class GUI {
             JLabel genreLabel = new JLabel("Genre:");
             genreLabel.setPreferredSize(new Dimension(90, 28));
             genreLabel.setVerticalAlignment(SwingConstants.CENTER);
-            String[] genres = { "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", "Horror",
-                    "Romance", "Sci-Fi" };
+            String[] genres = {"", "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", "Horror", "Romance", "Sci-Fi"};
             genreDropdown = new JComboBox<>(genres);
             genreDropdown.setPreferredSize(new Dimension(275, 28));
             genreDropdown.setBackground(Color.WHITE);
@@ -340,6 +343,17 @@ public class GUI {
             } catch (FileNotFoundException ex) {
                 System.out.println("File was not found.");
             }
+        };
+
+        private final DocumentListener change = new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                Border blackBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
+                JTextField field = (JTextField)e.getDocument();
+                field.setBorder(blackBorder);
+            }
+            public void removeUpdate(DocumentEvent e) {};
+            public void insertUpdate(DocumentEvent e) {};
+            
         };
 
         private final ActionListener parseClick = event -> { // File > Add Entry
@@ -783,14 +797,4 @@ public class GUI {
             add(scrollPane); // <--- Scroll pane contains User Guide text area
         }
     }
-
-    public static void main(String[] args) {
-        db = new Database();
-        db.createNewDatabase("ParsedDocumentsData.db");
-        db.createNewTable();
-        GUI gui = new GUI();
-        JFrame mainWindow = gui.getMainWindow();
-        mainWindow.setVisible(true);
-    }
-
 }
