@@ -69,7 +69,8 @@ public class GUI {
 
             // Create the dropdown menu
             // array 'options' will need to be populated with database records
-            String[] options = { "Test Option 1", "Test Option 2", "Test Option 3" };
+            //String[] options = { "Test Option 1", "Test Option 2", "Test Option 3" };
+            String[] options = db.retrieveTitles();
             JComboBox<String> recordsDropdown = new JComboBox<>(options);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);

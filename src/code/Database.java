@@ -144,6 +144,41 @@ public class Database {
         }
     }
 
+    
+    //fetch all titles from db, store results in array
+    protected static String[] retrieveTitles(){
+        ArrayList<String> titleArr = new ArrayList<>();
+        String[] titles;
+
+        try{
+            String url = "jdbc:sqlite:./ParsedDocumentsData.db";
+            Connection conn = DriverManager.getConnection(url);
+
+            // Create and execute the SQL query, store the results
+            String sql = "SELECT TITLE FROM textdata";
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sql);
+
+            while (result.next()) {
+                titleArr.add(result.getString("title"));
+            }
+
+            conn.close(); // Close the database connection
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        titles = new String[titleArr.size()+1];
+        titles[0] = "";
+
+        for (int i = 0; i < titleArr.size(); i++) {
+            titles[i+1] = titleArr.get(i);
+        }
+
+        return titles;
+    }
+    
+    
     // Testing out retrieving a full record from the database
     // Returns the record as a string array
     public String[] retrieveRecordByAuthorTitle(String table, String author, String title) {
@@ -221,6 +256,7 @@ public class Database {
          //dropTable();
         // insert("Bob bobson", "the test that tested me", 2023, "comedy", 3678945,
         // 23599, 4.3, 7.9, 100000);
-        selectAll();
+        //selectAll();
+        retrieveTitles();
     }
 }
