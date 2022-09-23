@@ -89,7 +89,7 @@ public class Database {
             double avgSyllablePerWord,
             double distinctWordCount, 
             String wordHash, String punctuationHash) {
-        String sql = "INSERT INTO textdata(author, title, published, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount, Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO textdata(author, title, published, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         String url = "jdbc:sqlite:./ParsedDocumentsData.db";
 
         try {
@@ -104,6 +104,13 @@ public class Database {
             pstmt.setDouble(7, avgWordLength);
             pstmt.setDouble(8, avgSentenceLength);
             pstmt.setDouble(9, punctuationCount);
+            pstmt.setDouble(10, fleschScore);
+            pstmt.setDouble(11, syllableCount);
+            pstmt.setDouble(12, avgSyllablePerWord);
+            pstmt.setDouble(13, distinctWordCount);
+            pstmt.setString(14, wordHash);
+            pstmt.setString(15, punctuationHash);
+
 
             pstmt.executeUpdate();
             System.out.println("inserted row");
@@ -179,6 +186,35 @@ public class Database {
     }
     
     
+    protected String[] retrieveRecordByTitle(String title) {
+
+        String[] resultStr = new String[16]; // String to hold the returned results
+
+        try{
+            String url = "jdbc:sqlite:./ParsedDocumentsData.db";
+            Connection conn = DriverManager.getConnection(url);
+
+            // Create and execute the SQL query, store the results
+            String sql = "SELECT * FROM textdata WHERE TITLE=\'" + title + "\'";
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sql);
+
+            // Get the results as a string
+            result.next();
+
+            for (int i = 1; i < 17; i++) {
+                resultStr[i-1] = result.getString(i);
+            }
+
+            conn.close(); // Close the database connection
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return resultStr; // Return the result string
+    }
+
+
+
     // Testing out retrieving a full record from the database
     // Returns the record as a string array
     public String[] retrieveRecordByAuthorTitle(String table, String author, String title) {

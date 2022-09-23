@@ -33,7 +33,9 @@ public class GUI {
     BufferedReader file;
     Tokenizer tokenizer;
 
-    static Database db;
+    static Database db = new Database();
+
+    JComboBox<String> recordsDropdown;
 
     // This function will return the MainGUI, ready to be setVisible()
     // This starts the application
@@ -71,7 +73,7 @@ public class GUI {
             // array 'options' will need to be populated with database records
             //String[] options = { "Test Option 1", "Test Option 2", "Test Option 3" };
             String[] options = db.retrieveTitles();
-            JComboBox<String> recordsDropdown = new JComboBox<>(options);
+            recordsDropdown = new JComboBox<>(options);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
 
@@ -103,6 +105,16 @@ public class GUI {
 
         // Display button Action Listener
         private final ActionListener displayClick = event -> { // File > Query Database
+            
+            String title = (String)recordsDropdown.getSelectedItem();
+            
+            String[] localResults = db.retrieveRecordByTitle(title);
+
+            for (int i = 0; i<localResults.length; i++) {
+                System.out.println(localResults[i] +"\n");
+            }
+            
+            
             System.out.println("You clicked the main window Display Button!");
         };
     }

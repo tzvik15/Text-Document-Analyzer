@@ -36,8 +36,7 @@ public class ApplicationRunner {
 
     public static void main(String[] args) {
 
-        // create database object
-        Database db = new Database();
+   
 
         // create GUI object
         GUI gui = new GUI();
