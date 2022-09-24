@@ -70,8 +70,6 @@ public class GUI {
             JLabel recordsDropdownLabel = new JLabel("Select a record to display metrics:");
 
             // Create the dropdown menu
-            // array 'options' will need to be populated with database records
-            //String[] options = { "Test Option 1", "Test Option 2", "Test Option 3" };
             String[] options = db.retrieveTitles();
             recordsDropdown = new JComboBox<>(options);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
@@ -446,7 +444,7 @@ public class GUI {
             JLabel recordsDropdownLabel = new JLabel("Select a record to delete:");
 
             // Create the records dropdown menu
-            String[] records = { "Test Option 1", "Test Option 2", "Test Option 3" };
+            String[] records = db.retrieveTitles();
             recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
@@ -480,9 +478,10 @@ public class GUI {
                     recordsDropdown.setSelectedIndex(0);
                     recordsDropdown.removeItem(recordStr);
 
-                    ////////////////////////////////////////////////////////////////////
-                    ///////// CALL DELETE RECORD HERE //////////////////////////////////
-                    ////////////////////////////////////////////////////////////////////
+                    //CALL DELETE RECORD HERE 
+                    String[] localResults = db.retrieveRecordByTitle(recordStr);
+                    db.deleteRowById(localResults[0]);
+                    System.out.println("record deleted");
                 } else {
                     System.out.println("You chose NO!");
                 }

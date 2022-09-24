@@ -185,8 +185,8 @@ public class Database {
         return titles;
     }
     
-    
-    protected String[] retrieveRecordByTitle(String title) {
+    //retrieve single record by input title
+    protected static String[] retrieveRecordByTitle(String title) {
 
         String[] resultStr = new String[16]; // String to hold the returned results
 
@@ -210,10 +210,26 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println(resultStr);
         return resultStr; // Return the result string
     }
 
+    protected static void deleteRowById(String id) {
 
+        try{
+            String url = "jdbc:sqlite:./ParsedDocumentsData.db";
+            Connection conn = DriverManager.getConnection(url);
+
+            // Create SQL query, execute it
+            String sql = "DELETE FROM textdata WHERE id=\'" + id + "\'";
+            Statement stmt = conn.createStatement();
+            stmt.executeQuery(sql);
+
+            conn.close(); // Close the database connection
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     // Testing out retrieving a full record from the database
     // Returns the record as a string array
@@ -293,6 +309,9 @@ public class Database {
         // insert("Bob bobson", "the test that tested me", 2023, "comedy", 3678945,
         // 23599, 4.3, 7.9, 100000);
         //selectAll();
-        retrieveTitles();
+        //System.out.println(retrieveRecordByTitle("CF5")[0]);
+        //deleteRowById("3");
+        selectAll();
+        //retrieveTitles();
     }
 }
