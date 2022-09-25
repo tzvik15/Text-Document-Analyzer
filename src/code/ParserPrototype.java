@@ -264,22 +264,24 @@ public class ParserPrototype {
                         distinctWordsCount++; // Increment distinct word count
                     }
 
-                    // If token is not a word (so punctuation and numbers parsed here)
-                } else {
-                    punctuationCount++; // Increment total punctuation count
+                    // If token is not a word or a number parsed here        
+                    } else if(!Character.isDigit(currentToken.charAt(0))){
+                        punctuationCount++; // Increment total punctuation count
 
-                    // If currentToken is a period, exclamation point, or question mark
-                    if (currentToken.charAt(0) == '.' || currentToken.charAt(0) == '!'
-                            || currentToken.charAt(0) == '?') {
-                        // This counts full sentences, NOT LINE BREAKS
-                        // So poems without punctuation may be iffy
-                        sentenceCount++;
+                        // If currentToken is a period, exclamation point, or question mark
+                        if (currentToken.charAt(0) == '.' || currentToken.charAt(0) == '!' || currentToken.charAt(0) == '?') {
+                            // This counts full sentences, NOT LINE BREAKS
+                            // So poems without punctuation may be iffy
+                            sentenceCount++;
+                        }
+
+                        // Check if punctuation is already in the hashmap
+                        // Updates hashmap appropriately
+                        updateHashMap(punctuationCountMap, currentToken);
                     }
-
-                    // Check if punctuation is already in the hashmap
-                    // Updates hashmap appropriately
-                    updateHashMap(punctuationCountMap, currentToken);
-                }
+                    
+                    //maybe add in count for numbers in text
+                    
                 // Get next token before looping again
                 currentToken = tokenizer.getNextToken();
             }
@@ -293,7 +295,7 @@ public class ParserPrototype {
             // https://readabilityformulas.com/flesch-reading-ease-readability-formula.php
             fleschScore = 206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord);
 
-            // Decimal fromat for rounding
+            // Decimal format for rounding
             DecimalFormat df = new DecimalFormat("0.00");
 
             System.out.println("Word Count: " + wordCount);
