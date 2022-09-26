@@ -24,6 +24,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 public class GUI {
+    MainGUI mainWindow; // Instantiate the main window.
     AddEntryGUI addEntryWindow; // Instantiate objects for each window.
     DeleteEntryGUI deleteEntryWindow; // This prevents opening multiple windows of the same type.
     SearchGUI searchWindow; // User can't open two 'Add Entry' windows at once.
@@ -35,16 +36,17 @@ public class GUI {
 
     static Database db = new Database();
 
-    JComboBox<String> recordsDropdown;
-
     // This function will return the MainGUI, ready to be setVisible()
     // This starts the application
     public MainGUI getMainWindow() {
-        return new MainGUI();
+        mainWindow = new MainGUI();
+        return mainWindow;
     }
 
     // The main window of the application
     private class MainGUI extends JFrame {
+        JComboBox<String> recordsDropdown;
+
         // Create the panels to hold groups of components
         JPanel inputPanel = new JPanel();
         JPanel buttonPanel = new JPanel();
@@ -70,8 +72,8 @@ public class GUI {
             JLabel recordsDropdownLabel = new JLabel("Select a record to display metrics:");
 
             // Create the dropdown menu
-            String[] options = db.retrieveTitles();
-            recordsDropdown = new JComboBox<>(options);
+            String[] records = db.retrieveAuthorsAndTitles();
+            recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
 
@@ -104,9 +106,12 @@ public class GUI {
         // Display button Action Listener
         private final ActionListener displayClick = event -> { // File > Query Database
 
-            String title = (String) recordsDropdown.getSelectedItem();
+            String recordStr = (String) recordsDropdown.getSelectedItem();
+            String[] authorAndTitle = recordStr.split(" - ");
+            String author = authorAndTitle[0];
+            String title = authorAndTitle[1];
 
-            String[] localResults = db.retrieveRecordByTitle(title);
+            String[] localResults = db.retrieveRecordByAuthorTitle(author, title);
 
             for (int i = 0; i < localResults.length; i++) {
                 System.out.println(localResults[i] + "\n");
@@ -413,6 +418,7 @@ public class GUI {
                     publishYearTextField.setText("");
                     genreDropdown.setSelectedIndex(0);
                     browseTextField.setText("");
+                    refreshRecordsDropdown();
                     JOptionPane.showMessageDialog(null, "File was parsed successfully!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Could not parse file.");
@@ -424,6 +430,7 @@ public class GUI {
     // The 'Delete Entry' window
     private class DeleteEntryGUI extends JFrame {
         JComboBox<String> recordsDropdown;
+
         JPanel inputPanel = new JPanel();
         JPanel deletePanel = new JPanel();
 
@@ -445,7 +452,7 @@ public class GUI {
             JLabel recordsDropdownLabel = new JLabel("Select a record to delete:");
 
             // Create the records dropdown menu
-            String[] records = db.retrieveTitles();
+            String[] records = db.retrieveAuthorsAndTitles();
             recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
@@ -477,13 +484,17 @@ public class GUI {
 
                     // Value of the record dropdown as a string
                     String recordStr = (String) recordsDropdown.getSelectedItem();
-                    recordsDropdown.setSelectedIndex(0);
-                    recordsDropdown.removeItem(recordStr);
+                    String[] authorAndTitle = recordStr.split(" - ");
+                    String author = authorAndTitle[0];
+                    String title = authorAndTitle[1];
 
                     // CALL DELETE RECORD HERE
-                    String[] localResults = db.retrieveRecordByTitle(recordStr);
+                    String[] localResults = db.retrieveRecordByAuthorTitle(author, title);
+                    System.out.println(localResults.toString());
                     db.deleteRowById(localResults[0]);
-                    System.out.println("record deleted");
+                    refreshRecordsDropdown();
+                    recordsDropdown.setSelectedIndex(0);
+                    System.out.println("Record deleted");
                 } else {
                     System.out.println("You chose NO!");
                 }
@@ -522,7 +533,7 @@ public class GUI {
 
             // Create the dropdown menu
             // array 'options' will need to be populated with database records
-            String[] records = { "Test Option 1", "Test Option 2", "Test Option 3" };
+            String[] records = db.retrieveAuthorsAndTitles();
             recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
@@ -910,4 +921,11 @@ public class GUI {
         public void focusLost(FocusEvent e) {
         };
     };
+
+    private void refreshRecordsDropdown() {
+        String[] records = db.retrieveAuthorsAndTitles();
+        mainWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+        deleteEntryWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+        searchWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+    }
 }

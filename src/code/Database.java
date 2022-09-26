@@ -186,6 +186,41 @@ public class Database {
 
         return titles;
     }
+
+    //fetch all author/title pairs from db, store results in array
+    protected static String[] retrieveAuthorsAndTitles(){
+        ArrayList<String> authorTitleArrList = new ArrayList<>();
+        String[] authorTitlesStrArr;
+
+        try{
+            String url = "jdbc:sqlite:./ParsedDocumentsData.db";
+            Connection conn = DriverManager.getConnection(url);
+
+            // Create and execute the SQL query, store the results
+            String sql = "SELECT AUTHOR, TITLE FROM textdata";
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sql);
+
+            while (result.next()) {
+                String author = result.getString("author");
+                String title = result.getString("title");
+                authorTitleArrList.add(author + " - " + title);
+            }
+
+            conn.close(); // Close the database connection
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        authorTitlesStrArr = new String[authorTitleArrList.size()+1];
+        authorTitlesStrArr[0] = "";
+
+        for (int i = 0; i < authorTitleArrList.size(); i++) {
+            authorTitlesStrArr[i+1] = authorTitleArrList.get(i);
+        }
+
+        return authorTitlesStrArr;
+    }
     
     //retrieve single record by input title
     protected static String[] retrieveRecordByTitle(String title) {
@@ -233,9 +268,9 @@ public class Database {
         }
     }
 
-    // Testing out retrieving a full record from the database
+    // Retrieve a full record from the database given an author and title
     // Returns the record as a string array
-    public String[] retrieveRecordByAuthorTitle(String table, String author, String title) {
+    public String[] retrieveRecordByAuthorTitle(String author, String title) {
 
         String[] resultStr = new String[16]; // String to hold the returned results
 
@@ -244,7 +279,7 @@ public class Database {
             Connection conn = DriverManager.getConnection(url);
 
             // Create and execute the SQL query, store the results
-            String sql = "SELECT * FROM " + table + " WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
+            String sql = "SELECT * FROM textdata WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(sql);
 
