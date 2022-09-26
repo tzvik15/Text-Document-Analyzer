@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.io.*;
 
-public class ParserPrototype {
+public class Parser {
     double wordCount = 0; // Number of words
     double sentenceCount = 0; // Number of sentences (counts . ! ?)
     double avgWordLength = 0; // Average word length
@@ -19,7 +19,7 @@ public class ParserPrototype {
     HashMap<String, Integer> distinctWordsMap;
     HashMap<String, Integer> punctuationCountMap;
 
-    public ParserPrototype() {
+    public Parser() {
         // String author, String title, String yearPublished, String genre
         // this.author = author;
         // this.title = title;

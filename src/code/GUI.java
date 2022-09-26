@@ -103,16 +103,15 @@ public class GUI {
 
         // Display button Action Listener
         private final ActionListener displayClick = event -> { // File > Query Database
-            
-            String title = (String)recordsDropdown.getSelectedItem();
-            
+
+            String title = (String) recordsDropdown.getSelectedItem();
+
             String[] localResults = db.retrieveRecordByTitle(title);
 
-            for (int i = 0; i<localResults.length; i++) {
-                System.out.println(localResults[i] +"\n");
+            for (int i = 0; i < localResults.length; i++) {
+                System.out.println(localResults[i] + "\n");
             }
-            
-            
+
             System.out.println("You clicked the main window Display Button!");
         };
     }
@@ -284,7 +283,8 @@ public class GUI {
             JLabel genreLabel = new JLabel("Genre:");
             genreLabel.setPreferredSize(new Dimension(90, 28));
             genreLabel.setVerticalAlignment(SwingConstants.CENTER);
-            String[] genres = {"", "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", "Horror", "Romance", "Sci-Fi"};
+            String[] genres = { "", "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", "Horror",
+                    "Romance", "Sci-Fi" };
             genreDropdown = new JComboBox<>(genres);
             genreDropdown.setPreferredSize(new Dimension(275, 28));
             genreDropdown.setBackground(Color.WHITE);
@@ -366,22 +366,22 @@ public class GUI {
                 authorTextField.setBorder(redBorder);
             } else if (titleTextField.getText().isEmpty()) {
                 titleTextField.setBorder(redBorder);
-            } else if ((String)genreDropdown.getSelectedItem() == "") {
+            } else if ((String) genreDropdown.getSelectedItem() == "") {
                 genreDropdown.setBorder(redBorder);
             } else if (browseTextField.getText().isEmpty()) {
                 browseTextField.setBorder(redBorder);
             } else {
-                ParserPrototype parser = new ParserPrototype();
+                Parser parser = new Parser();
                 boolean success = parser.parseDoc(file);
 
                 if (success) {
                     // Get all the field values
                     String author = authorTextField.getText();
                     String title = titleTextField.getText();
-                    String genre = (String)genreDropdown.getSelectedItem();
+                    String genre = (String) genreDropdown.getSelectedItem();
 
                     int published;
-                    
+
                     if (publishYearTextField.getText().isEmpty()) {
                         published = 0000;
                     } else {
@@ -404,7 +404,8 @@ public class GUI {
                     // insert entry in table
                     db.insert(author, title, published, genre, wordCount,
                             sentenceCount, avgWordLength, avgWordsPerSentence,
-                            punctuationCount, fleschScore, syllableCount, avgSyllablesPerWord, distinctWordsCount, wordsHash,
+                            punctuationCount, fleschScore, syllableCount, avgSyllablesPerWord, distinctWordsCount,
+                            wordsHash,
                             punctuationHash);
 
                     authorTextField.setText("");
@@ -469,16 +470,17 @@ public class GUI {
                 Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
                 recordsDropdown.setBorder(redBorder);
             } else {
-                int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?", "Alert!", JOptionPane.YES_NO_OPTION);
+                int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?",
+                        "Alert!", JOptionPane.YES_NO_OPTION);
                 if (confirmation == 0) {
                     System.out.println("You chose YES!");
 
                     // Value of the record dropdown as a string
-                    String recordStr = (String)recordsDropdown.getSelectedItem();
+                    String recordStr = (String) recordsDropdown.getSelectedItem();
                     recordsDropdown.setSelectedIndex(0);
                     recordsDropdown.removeItem(recordStr);
 
-                    //CALL DELETE RECORD HERE 
+                    // CALL DELETE RECORD HERE
                     String[] localResults = db.retrieveRecordByTitle(recordStr);
                     db.deleteRowById(localResults[0]);
                     System.out.println("record deleted");
@@ -573,12 +575,12 @@ public class GUI {
                 wordSearchTextField.setBorder(redBorder);
             } else {
                 // Value of the record dropdown as a string
-                String recordStr = (String)recordsDropdown.getSelectedItem();
+                String recordStr = (String) recordsDropdown.getSelectedItem();
                 String word = wordSearchTextField.getText();
 
-                    ////////////////////////////////////////////////////////////////////
-                    ///////// CALL SEARCH RECORD HERE //////////////////////////////////
-                    ////////////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////
+                ///////// CALL SEARCH RECORD HERE //////////////////////////////////
+                ////////////////////////////////////////////////////////////////////
             }
         };
     }
@@ -712,14 +714,14 @@ public class GUI {
                 equalsTextfield.setBorder(redBorder);
             } else {
                 // Get values of fields as strings
-                String view = (String)viewDropdown.getSelectedItem();
-                String of = (String)ofDropdown.getSelectedItem();
-                String where = (String)whereDropdown.getSelectedItem();
+                String view = (String) viewDropdown.getSelectedItem();
+                String of = (String) ofDropdown.getSelectedItem();
+                String where = (String) whereDropdown.getSelectedItem();
                 String equals = equalsTextfield.getText();
 
-                    ////////////////////////////////////////////////////////////////////
-                    ///////// CALL QUERY RECORD HERE ///////////////////////////////////
-                    ////////////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////
+                ///////// CALL QUERY RECORD HERE ///////////////////////////////////
+                ////////////////////////////////////////////////////////////////////
             }
         };
     }
@@ -896,13 +898,16 @@ public class GUI {
         }
     }
 
-    // A focus listener to remove the red border from required fields when they gain focus
+    // A focus listener to remove the red border from required fields when they gain
+    // focus
     private final FocusListener focus = new FocusListener() {
         public void focusGained(FocusEvent e) {
-            JComponent field = (JComponent)e.getComponent();
+            JComponent field = (JComponent) e.getComponent();
             Border defaultBorder = UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border");
             field.setBorder(defaultBorder);
         }
-        public void focusLost(FocusEvent e) { };
+
+        public void focusLost(FocusEvent e) {
+        };
     };
 }

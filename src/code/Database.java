@@ -27,6 +27,8 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+       
     }
 
     // drop table to start new
@@ -76,7 +78,7 @@ public class Database {
             Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
-            System.out.println("table created");
+            System.out.println("Table already exists, or new table created");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -305,13 +307,13 @@ public class Database {
 
         //createNewDatabase("ParsedDocumentsData.db");
         //createNewTable();
-         //dropTable();
+         dropTable();
         // insert("Bob bobson", "the test that tested me", 2023, "comedy", 3678945,
         // 23599, 4.3, 7.9, 100000);
         //selectAll();
         //System.out.println(retrieveRecordByTitle("CF5")[0]);
         //deleteRowById("3");
-        selectAll();
+        //selectAll();
         //retrieveTitles();
     }
 }
