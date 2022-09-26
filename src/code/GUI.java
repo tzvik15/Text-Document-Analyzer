@@ -116,8 +116,6 @@ public class GUI {
             for (int i = 0; i < localResults.length; i++) {
                 System.out.println(localResults[i] + "\n");
             }
-
-            System.out.println("You clicked the main window Display Button!");
         };
     }
 
@@ -360,7 +358,7 @@ public class GUI {
                 file = new BufferedReader(new FileReader(filePath));
 
             } catch (FileNotFoundException ex) {
-                System.out.println("File was not found.");
+                JOptionPane.showMessageDialog(null, "The selected file was not found.");
             }
         };
 
@@ -480,8 +478,6 @@ public class GUI {
                 int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?",
                         "Alert!", JOptionPane.YES_NO_OPTION);
                 if (confirmation == 0) {
-                    System.out.println("You chose YES!");
-
                     // Value of the record dropdown as a string
                     String recordStr = (String) recordsDropdown.getSelectedItem();
                     String[] authorAndTitle = recordStr.split(" - ");
@@ -494,9 +490,9 @@ public class GUI {
                     db.deleteRowById(localResults[0]);
                     refreshRecordsDropdown();
                     recordsDropdown.setSelectedIndex(0);
-                    System.out.println("Record deleted");
+                    JOptionPane.showMessageDialog(null, "The record " + author + " - " + title + " has been deleted.");
                 } else {
-                    System.out.println("You chose NO!");
+                    JOptionPane.showMessageDialog(null, "Record deletion CANCLED.");
                 }
             }
         };
@@ -506,6 +502,7 @@ public class GUI {
     private class SearchGUI extends JFrame {
         JComboBox<String> recordsDropdown;
         JTextField wordSearchTextField;
+        JTextArea displayArea;
 
         // Create the panels to hold groups of components
         JPanel inputPanel = new JPanel();
@@ -555,7 +552,7 @@ public class GUI {
             displayButton.addActionListener(displayClick);
 
             // Create the display area for data
-            JTextArea displayArea = new JTextArea(8, 40);
+            displayArea = new JTextArea(8, 40);
             displayArea.setEditable(false);
             displayArea.setLineWrap(true);
             displayArea.setWrapStyleWord(true);
@@ -587,11 +584,30 @@ public class GUI {
             } else {
                 // Value of the record dropdown as a string
                 String recordStr = (String) recordsDropdown.getSelectedItem();
+                String[] authorAndTitle = recordStr.split(" - ");
+                String author = authorAndTitle[0];
+                String title = authorAndTitle[1];
+
+                // Value of the word textfield
                 String word = wordSearchTextField.getText();
 
-                ////////////////////////////////////////////////////////////////////
-                ///////// CALL SEARCH RECORD HERE //////////////////////////////////
-                ////////////////////////////////////////////////////////////////////
+                //CALL SEARCH RECORD HERE
+                HashMap<String, Integer> wordsHash = db.retrieveHashMapByAuthorTitle("wordsHash", author, title);
+
+                if (word.equals("*")) {
+                    displayArea.setText("");
+                    wordsHash.forEach((key, value) -> {
+                        displayArea.append(key + ": " + value + "\n");
+                    });
+                } else {
+                    String msg = "";
+                    if (wordsHash.containsKey(word)) {
+                        msg += "Word: " + word + "\nFrequency: " + wordsHash.get(word);
+                    } else {
+                        msg += "Word: " + word + "\nFrequency: 0";
+                    }
+                    displayArea.setText(msg);
+                }
             }
         };
     }
@@ -925,7 +941,13 @@ public class GUI {
     private void refreshRecordsDropdown() {
         String[] records = db.retrieveAuthorsAndTitles();
         mainWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
-        deleteEntryWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
-        searchWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+
+        if (deleteEntryWindow != null && deleteEntryWindow.isVisible() == true) {
+            deleteEntryWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+        }
+
+        if (searchWindow != null && searchWindow.isVisible() == true) {
+            searchWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+        }
     }
 }
