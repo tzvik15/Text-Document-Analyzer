@@ -299,7 +299,7 @@ public class Database {
 
     // Get the hashmap from the database
     // Converts string data from database back into hashmap
-    public HashMap<String, Integer> retrieveHashMapByAuthorTitle(String table, String field, String author, String title) {  
+    public HashMap<String, Integer> retrieveHashMapByAuthorTitle(String field, String author, String title) {  
 
         // Create the hashmap again
         HashMap<String, Integer> myHashMap = new HashMap<String, Integer>();
@@ -309,7 +309,7 @@ public class Database {
             Connection conn = DriverManager.getConnection(url);
 
             // Create and execute the SQL query, store the results
-            String sql = "SELECT " + field + " FROM " + table + " WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
+            String sql = "SELECT " + field + " FROM textdata WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(sql);
 
