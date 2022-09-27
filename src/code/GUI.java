@@ -33,7 +33,8 @@ public class GUI {
     UserGuideGUI userGuideWindow;
     BufferedReader file;
     Tokenizer tokenizer;
-
+    
+    
     static Database db = new Database();
 
     // This function will return the MainGUI, ready to be setVisible()
@@ -52,6 +53,7 @@ public class GUI {
         JPanel buttonPanel = new JPanel();
         JPanel outputPanel = new JPanel();
         JMenuBar topMenuBar = new TopMenuBar();
+        JTextArea displayArea;
 
         private MainGUI() {
             // Window attributes
@@ -60,7 +62,7 @@ public class GUI {
             setLocationRelativeTo(null);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
-            setResizable(false);
+            setResizable(true);
 
             // Panel attributes
             inputPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 8));
@@ -83,7 +85,7 @@ public class GUI {
             displayButton.addActionListener(displayClick);
 
             // Create the display area for data
-            JTextArea displayArea = new JTextArea(16, 40);
+            displayArea = new JTextArea(16, 40);
             displayArea.setEditable(false);
             displayArea.setLineWrap(true);
             displayArea.setWrapStyleWord(true);
@@ -112,10 +114,24 @@ public class GUI {
             String title = authorAndTitle[1];
 
             String[] localResults = db.retrieveRecordByAuthorTitle(author, title);
+            
+            displayArea.setText(null);
+            displayArea.append("Author: "+localResults[1]+"\n");
+            displayArea.append("Title: "+localResults[2]+"\n");
+            displayArea.append("Published Year: "+localResults[3]+"\n");
+            displayArea.append("Genre: "+localResults[4]+"\n");
+            displayArea.append("Word Count: "+localResults[5]+"\n");
+            displayArea.append("Sentence Count: "+localResults[6]+"\n");
+            displayArea.append("Average Word Length: "+localResults[7]+"\n");
+            displayArea.append("Average Sentence Length: "+localResults[8]+"\n");
+            displayArea.append("Punctuation Count: "+localResults[9]+"\n");
+            displayArea.append("Flesch Score Ease: "+localResults[10]+"\n");
+            displayArea.append("Syllable Count: "+localResults[11]+"\n");
+            displayArea.append("Average Syllable Per Word: "+localResults[12]+"\n");
+            displayArea.append("Distinct Word Count: "+localResults[13]+"\n");
+            
+            displayArea.setFont(new Font("Serif", Font.BOLD, 12));
 
-            for (int i = 0; i < localResults.length; i++) {
-                System.out.println(localResults[i] + "\n");
-            }
         };
     }
 
