@@ -58,7 +58,7 @@ public class Tokenizer {
         // Determine if character is a letter, digit, or special character
         if (Character.isLetter(currentChar) || Character.isDigit(currentChar)) {
             // If letter, build lexeme from letter characters
-            while (Character.isLetter(currentChar)) {
+            while (Character.isLetter(currentChar)|| Character.isDigit(currentChar)) {
                 currentLexeme += currentChar;
                 currentChar = nextChar();
             }
