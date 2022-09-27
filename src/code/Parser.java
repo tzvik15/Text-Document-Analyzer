@@ -285,28 +285,18 @@ public class Parser {
                 // Get next token before looping again
                 currentToken = tokenizer.getNextToken();
             }
+            
+         // Decimal format for rounding
+            DecimalFormat df = new DecimalFormat("0.00");
 
             // Calculate the averages
-            avgWordLength = avgWordLength / wordCount;
-            avgWordsPerSentence = wordCount / sentenceCount;
-            avgSyllablesPerWord = syllableCount / wordCount;
+            avgWordLength = Double.parseDouble(df.format(avgWordLength / wordCount));
+            avgWordsPerSentence = Double.parseDouble(df.format(wordCount / sentenceCount));
+            avgSyllablesPerWord = Double.parseDouble(df.format(syllableCount / wordCount));
 
             // Formula found at
             // https://readabilityformulas.com/flesch-reading-ease-readability-formula.php
-            fleschScore = 206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord);
-
-            // Decimal format for rounding
-            DecimalFormat df = new DecimalFormat("0.00");
-
-            System.out.println("Word Count: " + wordCount);
-            System.out.println("Distinct Word Count: " + distinctWordsCount);
-            System.out.println("Punctuation Count: " + punctuationCount);
-            System.out.println("Sentence Count: " + sentenceCount);
-            System.out.println("Syllable Count: " + syllableCount);
-            System.out.println("Flesch Reading Ease Score: " + df.format(fleschScore));
-            System.out.println("AVG Word Per Sentence: " + df.format(avgWordsPerSentence));
-            System.out.println("AVG Syllables Per Word: " + df.format(avgSyllablesPerWord));
-            System.out.println("AVG Word Length: " + df.format(avgWordLength) + "\n");
+            fleschScore = Double.parseDouble(df.format(206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord)));
 
             return true;
 
