@@ -78,6 +78,7 @@ public class GUI {
             recordsDropdown = new JComboBox<>(records);
             recordsDropdown.setPreferredSize(new Dimension(365, 28));
             recordsDropdown.setBackground(Color.WHITE);
+            recordsDropdown.addFocusListener(focus);
 
             // Create the Display button
             JButton displayButton = new JButton("Display");
@@ -92,6 +93,7 @@ public class GUI {
             displayArea.setBorder(BorderFactory.createLoweredBevelBorder());
             JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a
                                                                    // scroll bar
+            scrollPane.setPreferredSize(new Dimension(365, 275));
 
             // Add components to the panels
             inputPanel.add(recordsDropdownLabel);
@@ -108,29 +110,34 @@ public class GUI {
         // Display button Action Listener
         private final ActionListener displayClick = event -> { // File > Query Database
 
-            String recordStr = (String) recordsDropdown.getSelectedItem();
-            String[] authorAndTitle = recordStr.split(" - ");
-            String author = authorAndTitle[0];
-            String title = authorAndTitle[1];
+            if (recordsDropdown.getSelectedItem() == "") {
+                Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+                recordsDropdown.setBorder(redBorder);
+            } else {
+                String recordStr = (String) recordsDropdown.getSelectedItem();
+                String[] authorAndTitle = recordStr.split(" - ");
+                String author = authorAndTitle[0];
+                String title = authorAndTitle[1];
 
-            String[] localResults = db.retrieveRecordByAuthorTitle(author, title);
-            
-            displayArea.setText(null);
-            displayArea.append("Author: "+localResults[1]+"\n");
-            displayArea.append("Title: "+localResults[2]+"\n");
-            displayArea.append("Published Year: "+localResults[3]+"\n");
-            displayArea.append("Genre: "+localResults[4]+"\n");
-            displayArea.append("Word Count: "+localResults[5]+"\n");
-            displayArea.append("Sentence Count: "+localResults[6]+"\n");
-            displayArea.append("Average Word Length: "+localResults[7]+"\n");
-            displayArea.append("Average Sentence Length: "+localResults[8]+"\n");
-            displayArea.append("Punctuation Count: "+localResults[9]+"\n");
-            displayArea.append("Flesch Score Ease: "+localResults[10]+"\n");
-            displayArea.append("Syllable Count: "+localResults[11]+"\n");
-            displayArea.append("Average Syllable Per Word: "+localResults[12]+"\n");
-            displayArea.append("Distinct Word Count: "+localResults[13]+"\n");
-            
-            displayArea.setFont(new Font("Serif", Font.BOLD, 12));
+                String[] localResults = db.retrieveRecordByAuthorTitle(author, title);
+                
+                displayArea.setText(null);
+                displayArea.append("Author: "+localResults[1]+"\n");
+                displayArea.append("Title: "+localResults[2]+"\n");
+                displayArea.append("Published Year: "+localResults[3]+"\n");
+                displayArea.append("Genre: "+localResults[4]+"\n");
+                displayArea.append("Word Count: "+localResults[5]+"\n");
+                displayArea.append("Sentence Count: "+localResults[6]+"\n");
+                displayArea.append("Average Word Length: "+localResults[7]+"\n");
+                displayArea.append("Average Sentence Length: "+localResults[8]+"\n");
+                displayArea.append("Punctuation Count: "+localResults[9]+"\n");
+                displayArea.append("Flesch Score Ease: "+localResults[10]+"\n");
+                displayArea.append("Syllable Count: "+localResults[11]+"\n");
+                displayArea.append("Average Syllable Per Word: "+localResults[12]+"\n");
+                displayArea.append("Distinct Word Count: "+localResults[13]+"\n");
+                
+                displayArea.setFont(new Font("Serif", Font.BOLD, 12));
+            }
 
         };
     }
@@ -297,6 +304,7 @@ public class GUI {
             publishYearLabel.setVerticalAlignment(SwingConstants.CENTER);
             publishYearTextField = new JTextField();
             publishYearTextField.setPreferredSize(new Dimension(275, 28));
+            publishYearTextField.addFocusListener(focus);
 
             // Create the Genre dropdown menu and label for the input panel
             JLabel genreLabel = new JLabel("Genre:");
@@ -385,6 +393,8 @@ public class GUI {
                 authorTextField.setBorder(redBorder);
             } else if (titleTextField.getText().isEmpty()) {
                 titleTextField.setBorder(redBorder);
+            } else if (!publishYearTextField.getText().matches("\\d+")) {
+                publishYearTextField.setBorder(redBorder);
             } else if ((String) genreDropdown.getSelectedItem() == "") {
                 genreDropdown.setBorder(redBorder);
             } else if (browseTextField.getText().isEmpty()) {
@@ -432,7 +442,7 @@ public class GUI {
                     publishYearTextField.setText("");
                     genreDropdown.setSelectedIndex(0);
                     browseTextField.setText("");
-                    refreshRecordsDropdown();
+                    refreshComponents();
                     JOptionPane.showMessageDialog(null, "File was parsed successfully!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Could not parse file.");
@@ -504,7 +514,7 @@ public class GUI {
                     String[] localResults = db.retrieveRecordByAuthorTitle(author, title);
                     System.out.println(localResults.toString());
                     db.deleteRowById(localResults[0]);
-                    refreshRecordsDropdown();
+                    refreshComponents();
                     recordsDropdown.setSelectedIndex(0);
                     JOptionPane.showMessageDialog(null, "The record " + author + " - " + title + " has been deleted.");
                 } else {
@@ -954,9 +964,10 @@ public class GUI {
         };
     };
 
-    private void refreshRecordsDropdown() {
+    private void refreshComponents() {
         String[] records = db.retrieveAuthorsAndTitles();
         mainWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+        mainWindow.displayArea.setText("");
 
         if (deleteEntryWindow != null && deleteEntryWindow.isVisible() == true) {
             deleteEntryWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
@@ -964,6 +975,8 @@ public class GUI {
 
         if (searchWindow != null && searchWindow.isVisible() == true) {
             searchWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+            searchWindow.wordSearchTextField.setText("");
+            searchWindow.displayArea.setText("");
         }
     }
 }
