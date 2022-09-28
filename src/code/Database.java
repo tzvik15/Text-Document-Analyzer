@@ -251,6 +251,92 @@ public class Database {
         return resultStr; // Return the result string
     }
 
+    protected static double sqlQuery(String view, String of, String where, String equals) {
+
+        String method = "";
+        String convertedOf = "";
+
+
+        switch (of) {
+            case "Word Count":
+                convertedOf = "wordCount";
+                break;
+            case "Distinct Word Count":
+                convertedOf = "distinctWordCount";
+                break;
+            case "Punctuation Count":
+                convertedOf = "punctuationCount";
+                break;
+            case "Sentence Count":
+                convertedOf = "sentenceCount";
+                break;
+            case "Syllable Count":
+                convertedOf = "syllableCount";
+                break;
+            case "Flesch Reading Ease Score":
+                convertedOf = "Flesch";
+                break;
+            case "Average Words Per Sentence":
+                convertedOf = "avgSentenceLength";
+                break;
+            case "Average Syllables Per Word":
+                convertedOf = "avgSyllablePerWord";
+                break;
+            case "Average Word Length":
+                convertedOf = "avgWordLength";
+                break;
+               
+            default:
+                break;
+        }
+
+        switch (view) {
+            case "Min":
+            method = "SELECT MIN(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
+                break;
+            case "Max":
+            method = "SELECT MAX(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
+                break;
+            case "Average":
+                method = "SELECT AVG(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
+                break;
+            case "Total":
+            method = "SELECT SUM(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
+                break;
+            default:
+                break;
+        }
+        
+        
+        double resultDoub = 0.0; // String to hold the returned results
+
+        try{
+            String url = "jdbc:sqlite:./ParsedDocumentsData.db";
+            Connection conn = DriverManager.getConnection(url);
+
+            // Create and execute the SQL query, store the results
+            String sql = method;
+            System.out.println(sql);
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sql);
+
+            // Get the results as a string
+            result.next();
+
+            
+            resultDoub = result.getDouble(1) ;   
+            
+
+            conn.close(); // Close the database connection
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println(resultDoub);
+        return resultDoub; // Return the result string
+    }
+
+
+
     protected static void deleteRowById(String id) {
 
         try{

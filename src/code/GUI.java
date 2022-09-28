@@ -680,7 +680,7 @@ public class GUI {
             JLabel viewLabel = new JLabel("VIEW:");
             viewLabel.setPreferredSize(new Dimension(90, 28));
             viewLabel.setVerticalAlignment(SwingConstants.CENTER);
-            String[] viewOptions = { "Average", "Total", "Min/Max" };
+            String[] viewOptions = { "Average", "Total", "Min", "Max" };
             viewDropdown = new JComboBox<>(viewOptions);
             viewDropdown.setPreferredSize(new Dimension(275, 28));
             viewDropdown.setBackground(Color.WHITE);
@@ -775,6 +775,7 @@ public class GUI {
                 ////////////////////////////////////////////////////////////////////
                 ///////// CALL QUERY RECORD HERE ///////////////////////////////////
                 ////////////////////////////////////////////////////////////////////
+                db.sqlQuery(view,of,where,equals);
             }
         };
     }
