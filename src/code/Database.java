@@ -296,17 +296,17 @@ public class Database {
         switch (view) {
             case "Min":
             extra = true;
-            method = "SELECT MIN(" + convertedOf +"), AUTHOR, TITLE FROM textdata WHERE " + where +" =\'" + equals + "\'";
+            method = "SELECT MIN(" + convertedOf +"), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where +") =\'" + equals + "\'";
                 break;
             case "Max":
             extra = true;
-            method = "SELECT MAX(" + convertedOf +"), AUTHOR, TITLE FROM textdata WHERE " + where +" =\'" + equals + "\'";
+            method = "SELECT MAX(" + convertedOf +"), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where +") =\'" + equals + "\'";
                 break;
             case "Average":
-                method = "SELECT AVG(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
+                method = "SELECT AVG(" + convertedOf +") FROM textdata WHERE LOWER(" + where +") =\'" + equals + "\'";
                 break;
             case "Total":
-            method = "SELECT SUM(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
+            method = "SELECT SUM(" + convertedOf +") FROM textdata WHERE LOWER(" + where +") =\'" + equals + "\'";
                 break;
             default:
                 break;

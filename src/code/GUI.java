@@ -735,8 +735,8 @@ public class GUI {
             displayArea.setLineWrap(true);
             displayArea.setWrapStyleWord(true);
             displayArea.setBorder(BorderFactory.createLoweredBevelBorder());
-            JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a
-                                                                   // scroll bar
+            JScrollPane scrollPane = new JScrollPane(displayArea);
+            scrollPane.setPreferredSize(new Dimension(375, 120));
 
             // Add components to the panels
             labelsPanel.add(viewLabel);
@@ -777,7 +777,7 @@ public class GUI {
                 String view = (String) viewDropdown.getSelectedItem();
                 String of = (String) ofDropdown.getSelectedItem();
                 String where = (String) whereDropdown.getSelectedItem();
-                String equals = equalsTextfield.getText();
+                String equals = equalsTextfield.getText().toLowerCase();
 
                 ////////////////////////////////////////////////////////////////////
                 ///////// CALL QUERY RECORD HERE ///////////////////////////////////
