@@ -251,11 +251,14 @@ public class Database {
         return resultStr; // Return the result string
     }
 
-    protected static double sqlQuery(String view, String of, String where, String equals) {
+    protected static String[] sqlQuery(String view, String of, String where, String equals) {
 
         String method = "";
         String convertedOf = "";
-
+        boolean extra = false;
+        String resultTitle="";
+        String resultAuthor="";
+        String[] resultArr = new String[3];
 
         switch (of) {
             case "Word Count":
@@ -292,10 +295,12 @@ public class Database {
 
         switch (view) {
             case "Min":
-            method = "SELECT MIN(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
+            extra = true;
+            method = "SELECT MIN(" + convertedOf +"), AUTHOR, TITLE FROM textdata WHERE " + where +" =\'" + equals + "\'";
                 break;
             case "Max":
-            method = "SELECT MAX(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
+            extra = true;
+            method = "SELECT MAX(" + convertedOf +"), AUTHOR, TITLE FROM textdata WHERE " + where +" =\'" + equals + "\'";
                 break;
             case "Average":
                 method = "SELECT AVG(" + convertedOf +") FROM textdata WHERE " + where +" =\'" + equals + "\'";
@@ -324,15 +329,23 @@ public class Database {
             result.next();
 
             
-            resultDoub = result.getDouble(1) ;   
-            
+            resultDoub = result.getDouble(1);
+            resultArr[0] = String.valueOf(resultDoub);   
+            if (extra) {
+                resultAuthor = result.getString(2);
+                resultTitle = result.getString(3);
+                resultArr[1] = resultAuthor;
+                resultArr[2] = resultTitle;
+            }
 
             conn.close(); // Close the database connection
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println(resultDoub);
-        return resultDoub; // Return the result string
+        for (int i = 0; i < resultArr.length; i++) {
+            System.out.println(resultArr[i]);
+        }
+        return resultArr; // Return the result string
     }
 
 
