@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.Scanner;
 import java.io.*;
+import java.nio.file.*;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -379,10 +380,13 @@ public class GUI {
                 }
                 jf.dispose();
 
-                file = new BufferedReader(new FileReader(filePath));
+                Path path = Paths.get(filePath);
+                file = Files.newBufferedReader(path);
 
             } catch (FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(null, "The selected file was not found.");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Could not retrieve selected file.");
             }
         };
 
@@ -619,10 +623,10 @@ public class GUI {
 
                 //CALL SEARCH RECORD HERE
                 HashMap<String, Integer> wordsHash = db.retrieveHashMapByAuthorTitle("wordsHash", author, title);
-
                 if (word.equals("*")) {
                     displayArea.setText("");
-                    wordsHash.forEach((key, value) -> {
+                    TreeMap<String, Integer> sortedMap = new TreeMap<>(wordsHash);
+                    sortedMap.forEach((key, value) -> {
                         displayArea.append(key + ": " + value + "\n");
                     });
                 } else {
