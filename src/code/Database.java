@@ -12,7 +12,7 @@ import java.util.*;
 public class Database {
 
     // initialize db
-    public static void createNewDatabase(String fileName) {
+    protected static void createNewDatabase(String fileName) {
 
         String url = "jdbc:sqlite:./" + fileName;
 
@@ -28,11 +28,10 @@ public class Database {
             System.out.println(e.getMessage());
         }
 
-       
     }
 
     // drop table to start new
-    public static void dropTable() {
+    protected void dropTable() {
         // SQLite connection string
         String url = "jdbc:sqlite:./ParsedDocumentsData.db";
 
@@ -50,7 +49,7 @@ public class Database {
     }
 
     // create new table with required schema
-    public static void createNewTable() {
+    protected void createNewTable() {
         // SQLite connection string
         String url = "jdbc:sqlite:./ParsedDocumentsData.db";
 
@@ -85,11 +84,11 @@ public class Database {
     }
 
     // insert new row
-    public static void insert(String author, String title, int published, String genre, double wordCount,
+    protected void insert(String author, String title, int published, String genre, double wordCount,
             double sentenceCount, double avgWordLength, double avgSentenceLength,
             double punctuationCount, double fleschScore, double syllableCount,
             double avgSyllablePerWord,
-            double distinctWordCount, 
+            double distinctWordCount,
             String wordHash, String punctuationHash) {
         String sql = "INSERT INTO textdata(author, title, published, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         String url = "jdbc:sqlite:./ParsedDocumentsData.db";
@@ -113,7 +112,6 @@ public class Database {
             pstmt.setString(14, wordHash);
             pstmt.setString(15, punctuationHash);
 
-
             pstmt.executeUpdate();
             System.out.println("inserted row");
         } catch (SQLException e) {
@@ -122,7 +120,7 @@ public class Database {
     }
 
     // print all table data
-    public static void selectAll() {
+    protected void selectAll() {
         String sql = "SELECT * FROM textdata";
         String url = "jdbc:sqlite:./ParsedDocumentsData.db";
 
@@ -153,13 +151,12 @@ public class Database {
         }
     }
 
-    
-    //fetch all titles from db, store results in array
-    protected static String[] retrieveTitles(){
+    // fetch all titles from db, store results in array
+    protected String[] retrieveTitles() {
         ArrayList<String> titleArr = new ArrayList<>();
         String[] titles;
 
-        try{
+        try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
             Connection conn = DriverManager.getConnection(url);
 
@@ -177,22 +174,22 @@ public class Database {
             System.out.println(e.getMessage());
         }
 
-        titles = new String[titleArr.size()+1];
+        titles = new String[titleArr.size() + 1];
         titles[0] = "";
 
         for (int i = 0; i < titleArr.size(); i++) {
-            titles[i+1] = titleArr.get(i);
+            titles[i + 1] = titleArr.get(i);
         }
 
         return titles;
     }
 
-    //fetch all author/title pairs from db, store results in array
-    protected static String[] retrieveAuthorsAndTitles(){
+    // fetch all author/title pairs from db, store results in array
+    protected String[] retrieveAuthorsAndTitles() {
         ArrayList<String> authorTitleArrList = new ArrayList<>();
         String[] authorTitlesStrArr;
 
-        try{
+        try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
             Connection conn = DriverManager.getConnection(url);
 
@@ -212,22 +209,22 @@ public class Database {
             System.out.println(e.getMessage());
         }
 
-        authorTitlesStrArr = new String[authorTitleArrList.size()+1];
+        authorTitlesStrArr = new String[authorTitleArrList.size() + 1];
         authorTitlesStrArr[0] = "";
 
         for (int i = 0; i < authorTitleArrList.size(); i++) {
-            authorTitlesStrArr[i+1] = authorTitleArrList.get(i);
+            authorTitlesStrArr[i + 1] = authorTitleArrList.get(i);
         }
 
         return authorTitlesStrArr;
     }
-    
-    //retrieve single record by input title
-    protected static String[] retrieveRecordByTitle(String title) {
+
+    // retrieve single record by input title
+    protected String[] retrieveRecordByTitle(String title) {
 
         String[] resultStr = new String[16]; // String to hold the returned results
 
-        try{
+        try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
             Connection conn = DriverManager.getConnection(url);
 
@@ -240,7 +237,7 @@ public class Database {
             result.next();
 
             for (int i = 1; i < 17; i++) {
-                resultStr[i-1] = result.getString(i);
+                resultStr[i - 1] = result.getString(i);
             }
 
             conn.close(); // Close the database connection
@@ -251,13 +248,13 @@ public class Database {
         return resultStr; // Return the result string
     }
 
-    protected static String[] sqlQuery(String view, String of, String where, String equals) {
+    protected String[] sqlQuery(String view, String of, String where, String equals) {
 
         String method = "";
         String convertedOf = "";
         boolean extra = false;
-        String resultTitle="";
-        String resultAuthor="";
+        String resultTitle = "";
+        String resultAuthor = "";
         String[] resultArr = new String[3];
 
         switch (of) {
@@ -288,34 +285,35 @@ public class Database {
             case "Average Word Length":
                 convertedOf = "avgWordLength";
                 break;
-               
+
             default:
                 break;
         }
 
         switch (view) {
             case "Min":
-            extra = true;
-            method = "SELECT MIN(" + convertedOf +"), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where +") =\'" + equals + "\'";
+                extra = true;
+                method = "SELECT MIN(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
+                        + equals + "\'";
                 break;
             case "Max":
-            extra = true;
-            method = "SELECT MAX(" + convertedOf +"), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where +") =\'" + equals + "\'";
+                extra = true;
+                method = "SELECT MAX(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
+                        + equals + "\'";
                 break;
             case "Average":
-                method = "SELECT AVG(" + convertedOf +") FROM textdata WHERE LOWER(" + where +") =\'" + equals + "\'";
+                method = "SELECT AVG(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
                 break;
             case "Total":
-            method = "SELECT SUM(" + convertedOf +") FROM textdata WHERE LOWER(" + where +") =\'" + equals + "\'";
+                method = "SELECT SUM(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
                 break;
             default:
                 break;
         }
-        
-        
+
         double resultDoub = 0.0; // String to hold the returned results
 
-        try{
+        try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
             Connection conn = DriverManager.getConnection(url);
 
@@ -328,9 +326,8 @@ public class Database {
             // Get the results as a string
             result.next();
 
-            
             resultDoub = result.getDouble(1);
-            resultArr[0] = String.valueOf(resultDoub);   
+            resultArr[0] = String.valueOf(resultDoub);
             if (extra) {
                 resultAuthor = result.getString(2);
                 resultTitle = result.getString(3);
@@ -348,11 +345,9 @@ public class Database {
         return resultArr; // Return the result string
     }
 
+    protected void deleteRowById(String id) {
 
-
-    protected static void deleteRowById(String id) {
-
-        try{
+        try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
             Connection conn = DriverManager.getConnection(url);
 
@@ -369,11 +364,11 @@ public class Database {
 
     // Retrieve a full record from the database given an author and title
     // Returns the record as a string array
-    public String[] retrieveRecordByAuthorTitle(String author, String title) {
+    protected String[] retrieveRecordByAuthorTitle(String author, String title) {
 
         String[] resultStr = new String[16]; // String to hold the returned results
 
-        try{
+        try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
             Connection conn = DriverManager.getConnection(url);
 
@@ -386,7 +381,7 @@ public class Database {
             result.next();
 
             for (int i = 1; i < 17; i++) {
-                resultStr[i-1] = result.getString(i);
+                resultStr[i - 1] = result.getString(i);
             }
 
             conn.close(); // Close the database connection
@@ -398,17 +393,18 @@ public class Database {
 
     // Get the hashmap from the database
     // Converts string data from database back into hashmap
-    public HashMap<String, Integer> retrieveHashMapByAuthorTitle(String field, String author, String title) {  
+    protected HashMap<String, Integer> retrieveHashMapByAuthorTitle(String field, String author, String title) {
 
         // Create the hashmap again
         HashMap<String, Integer> myHashMap = new HashMap<String, Integer>();
 
-        try{
+        try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
             Connection conn = DriverManager.getConnection(url);
 
             // Create and execute the SQL query, store the results
-            String sql = "SELECT " + field + " FROM textdata WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
+            String sql = "SELECT " + field + " FROM textdata WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title
+                    + "\'";
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(sql);
 
@@ -427,7 +423,7 @@ public class Database {
                 String[] pairArr = pair.split("=");
                 String key = pairArr[0];
                 int value = Integer.parseInt(pairArr[1]);
-                
+
                 myHashMap.put(key, value);
             }
             conn.close(); // Close the database connection
@@ -437,17 +433,4 @@ public class Database {
         return myHashMap; // Return the hashmap
     }
 
-    public static void main(String[] args) throws Exception {
-
-        //createNewDatabase("ParsedDocumentsData.db");
-        //createNewTable();
-         dropTable();
-        // insert("Bob bobson", "the test that tested me", 2023, "comedy", 3678945,
-        // 23599, 4.3, 7.9, 100000);
-        //selectAll();
-        //System.out.println(retrieveRecordByTitle("CF5")[0]);
-        //deleteRowById("3");
-        //selectAll();
-        //retrieveTitles();
-    }
 }

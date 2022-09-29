@@ -39,7 +39,7 @@ public class GUI {
     Tokenizer tokenizer;
     
     
-    static Database db = new Database();
+     Database db = new Database();
 
     // This function will return the MainGUI, ready to be setVisible()
     // This starts the application
