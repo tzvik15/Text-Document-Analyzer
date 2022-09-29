@@ -1,29 +1,16 @@
 package code;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.text.DecimalFormat;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
-import java.util.Scanner;
 import java.io.*;
 import java.nio.file.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
@@ -779,9 +766,7 @@ public class GUI {
                 String where = (String) whereDropdown.getSelectedItem();
                 String equals = equalsTextfield.getText().toLowerCase();
 
-                ////////////////////////////////////////////////////////////////////
-                ///////// CALL QUERY RECORD HERE ///////////////////////////////////
-                ////////////////////////////////////////////////////////////////////
+                // CALL QUERY RECORD HERE
                 db.sqlQuery(view,of,where,equals);
             }
         };

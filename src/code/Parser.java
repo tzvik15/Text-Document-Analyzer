@@ -19,28 +19,6 @@ public class Parser {
     HashMap<String, Integer> distinctWordsMap;
     HashMap<String, Integer> punctuationCountMap;
 
-    public Parser() {
-        // String author, String title, String yearPublished, String genre
-        // this.author = author;
-        // this.title = title;
-        // this.yearPublished = yearPublished;
-        // this.genre = genre;
-
-    }
-
-    // Connect to the database
-    // private Connection connect() {
-    // Connection conn = null;
-    // try {
-    // String url = "jdbc:sqlite:example.db";
-    // conn = DriverManager.getConnection(url);
-    // } catch (SQLException e) {
-    // System.out.println(e.getMessage());
-    // }
-
-    // return conn;
-    // }
-
     // variable GET methods
 
     protected String getWordHash() {
@@ -86,130 +64,6 @@ public class Parser {
     protected double getAvgWordLength() {
         return avgWordLength;
     }
-
-    // Insert a record into the database
-    // public void insertRecord(
-    // String table,
-    // String author,
-    // String title,
-    // String year,
-    // String genre,
-    // double wordCount,
-    // double distinctWordCount,
-    // double punctuationCount,
-    // double sentenceCount,
-    // double syllableCount,
-    // double fleschScore,
-    // double avgWordsPerSentence,
-    // double avgSyllablesPerWord,
-    // double avgWordLength,
-    // String distinctWords,
-    // String distinctPunctuation
-    // ) {
-
-    // try{
-    // Connection conn = connect(); // Connect to database
-
-    // // Create query (as prepared statement)
-    // String sql = "INSERT INTO " + table + "
-    // VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    // PreparedStatement pstmt = conn.prepareStatement(sql);
-
-    // // Set values for prepared statement
-    // // Note - parameter index 1 is the primary key ID,
-    // // so it updates automatically if not set
-    // pstmt.setString(2, author);
-    // pstmt.setString(3, title);
-    // pstmt.setString(4, year);
-    // pstmt.setString(5, genre);
-    // pstmt.setInt(6, (int)wordCount);
-    // pstmt.setInt(7, (int)distinctWordCount);
-    // pstmt.setInt(8, (int)punctuationCount);
-    // pstmt.setInt(9, (int)sentenceCount);
-    // pstmt.setInt(10, (int)syllableCount);
-    // pstmt.setString(11, Double.toString(fleschScore));
-    // pstmt.setString(12, Double.toString(avgWordsPerSentence));
-    // pstmt.setString(13, Double.toString(avgSyllablesPerWord));
-    // pstmt.setString(14, Double.toString(avgWordLength));
-    // pstmt.setString(15, distinctWords);
-    // pstmt.setString(16, distinctPunctuation);
-
-    // pstmt.executeUpdate(); // Execute the prepared statement
-    // conn.close(); // Close the database
-    // } catch (SQLException e) {
-    // System.out.println(e.getMessage());
-    // }
-    // }
-
-    // Get the hashmap from the database
-    // Converts string data from database back into hashmap
-    // public HashMap<String, Integer> retrieveHashMapByAuthorTitle(String table, String field, String author,
-    //         String title) {
-
-    //     // Create the hashmap again
-    //     HashMap<String, Integer> myHashMap = new HashMap<String, Integer>();
-
-    //     try {
-    //         Connection conn = connect(); // Connect to the database
-
-    //         // Create and execute the SQL query, store the results
-    //         String sql = "SELECT " + field + " FROM " + table + " WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title
-    //                 + "\'";
-    //         Statement stmt = conn.createStatement();
-    //         ResultSet result = stmt.executeQuery(sql);
-
-    //         // Get the results as a string
-    //         String resultStr = result.getString(field);
-
-    //         // This line removes the curly brackets from the string data { }
-    //         resultStr = resultStr.substring(1, resultStr.length() - 1);
-
-    //         // Split the data between comma/space ", "
-    //         String[] resultArr = resultStr.split(", ");
-
-    //         // For each word/value combo, split and add to hashmap
-    //         for (int i = 0; i < resultArr.length; i++) {
-    //             String pair = resultArr[i];
-    //             String[] pairArr = pair.split("=");
-    //             String key = pairArr[0];
-    //             int value = Integer.parseInt(pairArr[1]);
-
-    //             myHashMap.put(key, value);
-    //         }
-    //         conn.close(); // Close the database connection
-    //     } catch (SQLException e) {
-    //         System.out.println(e.getMessage());
-    //     }
-    //     return myHashMap; // Return the hashmap
-    // }
-
-    // Testing out retrieving a full record from the database
-    // Returns the record as a string array
-    // public String[] retrieveRecordByAuthorTitle(String table, String author, String title) {
-
-    //     String[] resultStr = new String[16]; // String to hold the returned results
-
-    //     try {
-    //         Connection conn = connect(); // Connect to the database
-
-    //         // Create and execute the SQL query, store the results
-    //         String sql = "SELECT * FROM " + table + " WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
-    //         Statement stmt = conn.createStatement();
-    //         ResultSet result = stmt.executeQuery(sql);
-
-    //         // Get the results as a string
-    //         result.next();
-
-    //         for (int i = 1; i < 17; i++) {
-    //             resultStr[i - 1] = result.getString(i);
-    //         }
-
-    //         conn.close(); // Close the database connection
-    //     } catch (SQLException e) {
-    //         System.out.println(e.getMessage());
-    //     }
-    //     return resultStr; // Return the result string
-    // }
 
     // Checks if token is in hashmap
     // Adds token to hashmap OR increments counter if it's already in there
@@ -303,28 +157,5 @@ public class Parser {
         } catch (FileNotFoundException ex) {
             return false; // Return false if bad thing happen
         }
-    }
-
-    public String getDistinctWordsMap() {
-        return distinctWordsMap.toString();
-    }
-
-    public String getDistinctPunctuationMap() {
-        return punctuationCountMap.toString();
-    }
-
-    public double[] getResults() {
-        double[] results = new double[] {
-                wordCount,
-                sentenceCount,
-                avgWordLength,
-                avgWordsPerSentence,
-                punctuationCount,
-                distinctWordsCount,
-                syllableCount,
-                fleschScore,
-                avgSyllablesPerWord
-        };
-        return results;
     }
 }

@@ -8,7 +8,7 @@ public class Tokenizer {
     private String inputLine = "";
     private String currentLexeme = "";
 
-    // Constructor for the FileScanner class
+    // Constructor for the Tokenizer class
     public Tokenizer(BufferedReader file) throws FileNotFoundException {
         // Open the file for reading and extract the first character
         this.file = file;
