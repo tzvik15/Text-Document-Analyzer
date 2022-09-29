@@ -585,13 +585,13 @@ public class GUI {
             displayButton.addActionListener(displayClick);
 
             // Create the display area for data
-            displayArea = new JTextArea(8, 40);
+            displayArea = new JTextArea();
             displayArea.setEditable(false);
             displayArea.setLineWrap(true);
             displayArea.setWrapStyleWord(true);
             displayArea.setBorder(BorderFactory.createLoweredBevelBorder());
-            JScrollPane scrollPane = new JScrollPane(displayArea); // Add text area to scroll pane so it can have a
-                                                                   // scroll bar
+            JScrollPane scrollPane = new JScrollPane(displayArea);
+            scrollPane.setPreferredSize(new Dimension(365, 150));
 
             // Add components to the panels
             inputPanel.add(recordsDropdownLabel);
@@ -634,8 +634,8 @@ public class GUI {
                     });
                 } else {
                     String msg = "";
-                    if (wordsHash.containsKey(word)) {
-                        msg += "Word: " + word + "\nFrequency: " + wordsHash.get(word);
+                    if (wordsHash.containsKey(word.toLowerCase())) {
+                        msg += "Word: " + word + "\nFrequency: " + wordsHash.get(word.toLowerCase());
                     } else {
                         msg += "Word: " + word + "\nFrequency: 0";
                     }
