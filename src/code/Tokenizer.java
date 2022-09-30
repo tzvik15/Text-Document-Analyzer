@@ -58,7 +58,15 @@ public class Tokenizer {
         // Determine if character is a letter, digit, or special character
         if (Character.isLetter(currentChar) || Character.isDigit(currentChar)) {
             // If letter, build lexeme from letter characters
-            while (Character.isLetter(currentChar)|| Character.isDigit(currentChar)|| currentChar == '\'') {
+            while (Character.isLetter(currentChar) || 
+                Character.isDigit(currentChar) || 
+                currentChar == '\u2019' ||
+                currentChar == '\'' ||
+                currentChar == '-') {
+
+                // Convert UTF-8 right quotation mark to ASCII
+                if (currentChar == '\u2019') { currentChar = '\''; }
+                
                 currentLexeme += currentChar;
                 currentChar = nextChar();
             }
