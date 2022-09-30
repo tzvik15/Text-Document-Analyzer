@@ -394,6 +394,10 @@ public class GUI {
             } else if (browseTextField.getText().isEmpty()) {
                 browseTextField.setBorder(redBorder);
             } else {
+            	//create timeStart and timeEnd variables and start time
+            	long timeStart =0;
+            	long timeEnd = 0;
+            	timeStart = System.nanoTime();
                 Parser parser = new Parser();
                 boolean success = parser.parseDoc(file);
 
@@ -441,6 +445,12 @@ public class GUI {
                 } else {
                     JOptionPane.showMessageDialog(null, "Could not parse file.");
                 }
+                //end system time and print
+                timeEnd = System.nanoTime();
+                long timeResult = timeEnd - timeStart;
+                double timeResultSec = (double) timeResult /1000000000;
+                System.out.println("Total Time (in seconds): "+ timeResultSec);
+                
             }
         };
     }
