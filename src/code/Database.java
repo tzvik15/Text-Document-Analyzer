@@ -319,7 +319,7 @@ public class Database {
 
             // Create and execute the SQL query, store the results
             String sql = method;
-            System.out.println(sql);
+            //System.out.println(sql);
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery(sql);
 
@@ -339,9 +339,9 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        for (int i = 0; i < resultArr.length; i++) {
+       /* for (int i = 0; i < resultArr.length; i++) {
             System.out.println(resultArr[i]);
-        }
+        }*/
         return resultArr; // Return the result string
     }
 

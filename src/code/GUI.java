@@ -627,6 +627,7 @@ public class GUI {
                         msg += "Word: " + word + "\nFrequency: 0";
                     }
                     displayArea.setText(msg);
+                    displayArea.setFont(new Font("Serif", Font.BOLD, 12));
                 }
             }
         };
@@ -638,6 +639,7 @@ public class GUI {
         JComboBox<String> ofDropdown;
         JComboBox<String> whereDropdown;
         JTextField equalsTextfield;
+        JTextArea displayAreaQuery;
 
         // Create the panels to hold groups of components
         JPanel inputPanel = new JPanel();
@@ -717,12 +719,12 @@ public class GUI {
             displayButton.addActionListener(displayClick);
 
             // Create the display area for data
-            JTextArea displayArea = new JTextArea(8, 40);
-            displayArea.setEditable(false);
-            displayArea.setLineWrap(true);
-            displayArea.setWrapStyleWord(true);
-            displayArea.setBorder(BorderFactory.createLoweredBevelBorder());
-            JScrollPane scrollPane = new JScrollPane(displayArea);
+            displayAreaQuery = new JTextArea(8, 40);
+            displayAreaQuery.setEditable(false);
+            displayAreaQuery.setLineWrap(true);
+            displayAreaQuery.setWrapStyleWord(true);
+            displayAreaQuery.setBorder(BorderFactory.createLoweredBevelBorder());
+            JScrollPane scrollPane = new JScrollPane(displayAreaQuery);
             scrollPane.setPreferredSize(new Dimension(375, 120));
 
             // Add components to the panels
@@ -766,8 +768,23 @@ public class GUI {
                 String where = (String) whereDropdown.getSelectedItem();
                 String equals = equalsTextfield.getText().toLowerCase();
 
-                // CALL QUERY RECORD HERE
+             // CALL QUERY RECORD HERE
                 db.sqlQuery(view,of,where,equals);
+                
+                
+                String[] localResults = db.sqlQuery(view,of,where,equals);
+                
+                displayAreaQuery.setText(null);
+                
+                displayAreaQuery.append(view+": "+localResults[0]+"\n");
+                if(localResults[1]!=null) {
+                	displayAreaQuery.append("Author: "+localResults[1]+"\n");
+                	}
+                if(localResults[2]!=null) {
+                	displayAreaQuery.append("Title: "+localResults[2]+"\n");
+                	}
+                
+                displayAreaQuery.setFont(new Font("Serif", Font.BOLD, 12));
             }
         };
     }
