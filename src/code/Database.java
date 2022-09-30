@@ -311,7 +311,7 @@ public class Database {
                 break;
         }
 
-        double resultDoub = 0.0; // String to hold the returned results
+        double resultDoub = 0.0; // variable to hold the returned results
 
         try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
