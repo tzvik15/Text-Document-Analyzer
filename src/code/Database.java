@@ -31,7 +31,7 @@ public class Database {
     }
 
     // drop table to start new
-    protected void dropTable() {
+    protected static void dropTable() {
         // SQLite connection string
         String url = "jdbc:sqlite:./ParsedDocumentsData.db";
 
@@ -59,6 +59,7 @@ public class Database {
                 + " author text NOT NULL,\n"
                 + " title text NOT NULL,\n"
                 + " published integer NOT NULL,\n"
+                + " era text NOT NULL,\n"
                 + " genre text NOT NULL,\n"
                 + " wordCount real NOT NULL,\n"
                 + " sentenceCount real NOT NULL,\n"
@@ -84,13 +85,13 @@ public class Database {
     }
 
     // insert new row
-    protected void insert(String author, String title, int published, String genre, double wordCount,
+    protected void insert(String author, String title, int published, String era, String genre, double wordCount,
             double sentenceCount, double avgWordLength, double avgSentenceLength,
             double punctuationCount, double fleschScore, double syllableCount,
             double avgSyllablePerWord,
             double distinctWordCount,
             String wordHash, String punctuationHash) {
-        String sql = "INSERT INTO textdata(author, title, published, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO textdata(author, title, published, era, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         String url = "jdbc:sqlite:./ParsedDocumentsData.db";
 
         try {
@@ -99,18 +100,19 @@ public class Database {
             pstmt.setString(1, author);
             pstmt.setString(2, title);
             pstmt.setInt(3, published);
-            pstmt.setString(4, genre);
-            pstmt.setDouble(5, wordCount);
-            pstmt.setDouble(6, sentenceCount);
-            pstmt.setDouble(7, avgWordLength);
-            pstmt.setDouble(8, avgSentenceLength);
-            pstmt.setDouble(9, punctuationCount);
-            pstmt.setDouble(10, fleschScore);
-            pstmt.setDouble(11, syllableCount);
-            pstmt.setDouble(12, avgSyllablePerWord);
-            pstmt.setDouble(13, distinctWordCount);
-            pstmt.setString(14, wordHash);
-            pstmt.setString(15, punctuationHash);
+            pstmt.setString(4, era);
+            pstmt.setString(5, genre);
+            pstmt.setDouble(6, wordCount);
+            pstmt.setDouble(7, sentenceCount);
+            pstmt.setDouble(8, avgWordLength);
+            pstmt.setDouble(9, avgSentenceLength);
+            pstmt.setDouble(10, punctuationCount);
+            pstmt.setDouble(11, fleschScore);
+            pstmt.setDouble(12, syllableCount);
+            pstmt.setDouble(13, avgSyllablePerWord);
+            pstmt.setDouble(14, distinctWordCount);
+            pstmt.setString(15, wordHash);
+            pstmt.setString(16, punctuationHash);
 
             pstmt.executeUpdate();
             System.out.println("inserted row");
@@ -222,7 +224,7 @@ public class Database {
     // retrieve single record by input title
     protected String[] retrieveRecordByTitle(String title) {
 
-        String[] resultStr = new String[16]; // String to hold the returned results
+        String[] resultStr = new String[17]; // String to hold the returned results
 
         try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
@@ -236,7 +238,7 @@ public class Database {
             // Get the results as a string
             result.next();
 
-            for (int i = 1; i < 17; i++) {
+            for (int i = 1; i < 18; i++) {
                 resultStr[i - 1] = result.getString(i);
             }
 
@@ -255,7 +257,7 @@ public class Database {
         boolean extra = false;
         String resultTitle = "";
         String resultAuthor = "";
-        String[] resultArr = new String[3];
+        String[] resultArr = new String[4];
 
         switch (of) {
             case "Word Count":
@@ -366,7 +368,7 @@ public class Database {
     // Returns the record as a string array
     protected String[] retrieveRecordByAuthorTitle(String author, String title) {
 
-        String[] resultStr = new String[16]; // String to hold the returned results
+        String[] resultStr = new String[17]; // String to hold the returned results
 
         try {
             String url = "jdbc:sqlite:./ParsedDocumentsData.db";
@@ -380,7 +382,7 @@ public class Database {
             // Get the results as a string
             result.next();
 
-            for (int i = 1; i < 17; i++) {
+            for (int i = 1; i < 18; i++) {
                 resultStr[i - 1] = result.getString(i);
             }
 
@@ -433,4 +435,11 @@ public class Database {
         return myHashMap; // Return the hashmap
     }
 
+
+//main method for internal use to drop existing table in db for schema update
+public static void main(String[] args) {
+    dropTable();
 }
+
+}
+

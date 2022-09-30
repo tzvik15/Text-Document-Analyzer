@@ -116,16 +116,17 @@ public class GUI {
                 displayArea.append("Author: "+localResults[1]+"\n");
                 displayArea.append("Title: "+localResults[2]+"\n");
                 displayArea.append("Published Year: "+localResults[3]+"\n");
-                displayArea.append("Genre: "+localResults[4]+"\n");
-                displayArea.append("Word Count: "+localResults[5]+"\n");
-                displayArea.append("Sentence Count: "+localResults[6]+"\n");
-                displayArea.append("Average Word Length: "+localResults[7]+"\n");
-                displayArea.append("Average Sentence Length: "+localResults[8]+"\n");
-                displayArea.append("Punctuation Count: "+localResults[9]+"\n");
-                displayArea.append("Flesch Score Ease: "+localResults[10]+"\n");
-                displayArea.append("Syllable Count: "+localResults[11]+"\n");
-                displayArea.append("Average Syllable Per Word: "+localResults[12]+"\n");
-                displayArea.append("Distinct Word Count: "+localResults[13]+"\n");
+                displayArea.append("Era: "+localResults[4]+"\n");
+                displayArea.append("Genre: "+localResults[5]+"\n");
+                displayArea.append("Word Count: "+localResults[6]+"\n");
+                displayArea.append("Sentence Count: "+localResults[7]+"\n");
+                displayArea.append("Average Word Length: "+localResults[8]+"\n");
+                displayArea.append("Average Sentence Length: "+localResults[9]+"\n");
+                displayArea.append("Punctuation Count: "+localResults[10]+"\n");
+                displayArea.append("Flesch Score Ease: "+localResults[11]+"\n");
+                displayArea.append("Syllable Count: "+localResults[12]+"\n");
+                displayArea.append("Average Syllable Per Word: "+localResults[13]+"\n");
+                displayArea.append("Distinct Word Count: "+localResults[14]+"\n");
                 
                 displayArea.setFont(new Font("Serif", Font.BOLD, 12));
             }
@@ -445,7 +446,7 @@ public class GUI {
                     String punctuationHash = parser.getPunctuationHash();
 
                     // insert entry in table
-                    db.insert(author, title, published, genre, wordCount,
+                    db.insert(author, title, published, era, genre, wordCount,
                             sentenceCount, avgWordLength, avgWordsPerSentence,
                             punctuationCount, fleschScore, syllableCount, avgSyllablesPerWord, distinctWordsCount,
                             wordsHash,
@@ -724,7 +725,7 @@ public class GUI {
             JLabel whereLabel = new JLabel("WHERE:");
             whereLabel.setPreferredSize(new Dimension(90, 28));
             whereLabel.setVerticalAlignment(SwingConstants.CENTER);
-            String[] whereOptions = { "Author", "Title", "Publish Year", "Genre" };
+            String[] whereOptions = { "Author", "Title", "Publish Year", "Era", "Genre" };
             whereDropdown = new JComboBox<>(whereOptions);
             whereDropdown.setPreferredSize(new Dimension(275, 28));
             whereDropdown.setBackground(Color.WHITE);
@@ -793,6 +794,7 @@ public class GUI {
                 String of = (String) ofDropdown.getSelectedItem();
                 String where = (String) whereDropdown.getSelectedItem();
                 String equals = equalsTextfield.getText().toLowerCase();
+
 
              // CALL QUERY RECORD HERE
                 db.sqlQuery(view,of,where,equals);
