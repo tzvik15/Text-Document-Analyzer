@@ -15,6 +15,20 @@ public class Tokenizer {
         currentChar = nextChar();
     }
 
+    private boolean nextCharIsLetter() {       
+        // If the last character was reached...
+        if (charCounter == inputLine.length()) {
+            return false;
+        }
+        
+        // If next char is letter, return true
+        if (Character.isLetter(inputLine.charAt(charCounter))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Returns the next character in the current line of the input document
     private char nextChar() {
         // Try to extract the next character
@@ -35,7 +49,7 @@ public class Tokenizer {
                 inputLine = file.readLine();
             }
 
-            return inputLine.charAt(charCounter++); // Return the enxt character
+            return inputLine.charAt(charCounter++); // Return the next character
         } catch (IOException ex) {
             return 0;
         }
@@ -60,9 +74,9 @@ public class Tokenizer {
             // If letter, build lexeme from letter characters
             while (Character.isLetter(currentChar) || 
                 Character.isDigit(currentChar) || 
-                currentChar == '\u2019' ||
-                currentChar == '\'' ||
-                currentChar == '-') {
+                (currentChar == '\u2019' && nextCharIsLetter()) ||
+                (currentChar == '\'' && nextCharIsLetter()) ||
+                (currentChar == '-' && nextCharIsLetter())) {
 
                 // Convert UTF-8 right quotation mark to ASCII
                 if (currentChar == '\u2019') { currentChar = '\''; }
