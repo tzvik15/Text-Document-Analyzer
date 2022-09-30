@@ -241,6 +241,7 @@ public class GUI {
         JTextField authorTextField;
         JTextField titleTextField;
         JTextField publishYearTextField;
+        JComboBox<String> eraDropdown;
         JComboBox<String> genreDropdown;
         JTextField browseTextField;
 
@@ -256,7 +257,7 @@ public class GUI {
         private AddEntryGUI() {
             // Window attributes
             super("Add Entry");
-            setSize(450, 350);
+            setSize(450, 380);
             setLocationRelativeTo(null);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
@@ -264,16 +265,16 @@ public class GUI {
 
             // Panel attributes
             inputPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 8));
-            inputPanel.setPreferredSize(new Dimension(365, 151));
+            inputPanel.setPreferredSize(new Dimension(365, 190));
             browsePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 4));
             browsePanel.setPreferredSize(new Dimension(365, 75));
             parsePanel.setPreferredSize(new Dimension(365, 35));
 
             // Nested panels attributes
             labelsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 8));
-            labelsPanel.setPreferredSize(new Dimension(85, 150));
+            labelsPanel.setPreferredSize(new Dimension(85, 180));
             fieldsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 8));
-            fieldsPanel.setPreferredSize(new Dimension(280, 150));
+            fieldsPanel.setPreferredSize(new Dimension(280, 180));
 
             // Create the textfields and labels for the input panel
             JLabel authorLabel = new JLabel("Author:");
@@ -296,6 +297,16 @@ public class GUI {
             publishYearTextField = new JTextField();
             publishYearTextField.setPreferredSize(new Dimension(275, 28));
             publishYearTextField.addFocusListener(focus);
+
+            // Create the Era dropdown menu and label for the input panel
+            JLabel eraLabel = new JLabel("Era:");
+            eraLabel.setPreferredSize(new Dimension(90, 28));
+            eraLabel.setVerticalAlignment(SwingConstants.CENTER);
+            String[] eras = { "", "ACE", "BCE" };
+            eraDropdown = new JComboBox<>(eras);
+            eraDropdown.setPreferredSize(new Dimension(275, 28));
+            eraDropdown.setBackground(Color.WHITE);
+            eraDropdown.addFocusListener(focus);
 
             // Create the Genre dropdown menu and label for the input panel
             JLabel genreLabel = new JLabel("Genre:");
@@ -331,11 +342,13 @@ public class GUI {
             labelsPanel.add(authorLabel);
             labelsPanel.add(titleLabel);
             labelsPanel.add(publishYearLabel);
+            labelsPanel.add(eraLabel);
             labelsPanel.add(genreLabel);
 
             fieldsPanel.add(authorTextField);
             fieldsPanel.add(titleTextField);
             fieldsPanel.add(publishYearTextField);
+            fieldsPanel.add(eraDropdown);
             fieldsPanel.add(genreDropdown);
 
             inputPanel.add(labelsPanel);
@@ -391,9 +404,15 @@ public class GUI {
                 publishYearTextField.setBorder(redBorder);
             } else if ((String) genreDropdown.getSelectedItem() == "") {
                 genreDropdown.setBorder(redBorder);
+            } else if ((String) eraDropdown.getSelectedItem() == "") {
+                eraDropdown.setBorder(redBorder);
             } else if (browseTextField.getText().isEmpty()) {
                 browseTextField.setBorder(redBorder);
             } else {
+            	//create timeStart and timeEnd variables and start time
+            	long timeStart =0;
+            	long timeEnd = 0;
+            	timeStart = System.nanoTime();
                 Parser parser = new Parser();
                 boolean success = parser.parseDoc(file);
 
@@ -402,6 +421,7 @@ public class GUI {
                     String author = authorTextField.getText();
                     String title = titleTextField.getText();
                     String genre = (String) genreDropdown.getSelectedItem();
+                    String era = (String) eraDropdown.getSelectedItem();
 
                     int published;
 
@@ -441,6 +461,12 @@ public class GUI {
                 } else {
                     JOptionPane.showMessageDialog(null, "Could not parse file.");
                 }
+                //end system time and print
+                timeEnd = System.nanoTime();
+                long timeResult = timeEnd - timeStart;
+                double timeResultSec = (double) timeResult /1000000000;
+                System.out.println("Total Time (in seconds): "+ timeResultSec);
+                
             }
         };
     }
