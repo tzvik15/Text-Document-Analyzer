@@ -118,15 +118,15 @@ public class GUI {
                 displayArea.append("Published Year: "+localResults[3]+"\n");
                 displayArea.append("Era: "+localResults[4]+"\n");
                 displayArea.append("Genre: "+localResults[5]+"\n");
-                displayArea.append("Word Count: "+localResults[6]+"\n");
-                displayArea.append("Sentence Count: "+localResults[7]+"\n");
-                displayArea.append("Average Word Length: "+localResults[8]+"\n");
-                displayArea.append("Average Sentence Length: "+localResults[9]+"\n");
-                displayArea.append("Punctuation Count: "+localResults[10]+"\n");
-                displayArea.append("Flesch Score Ease: "+localResults[11]+"\n");
-                displayArea.append("Syllable Count: "+localResults[12]+"\n");
-                displayArea.append("Average Syllable Per Word: "+localResults[13]+"\n");
-                displayArea.append("Distinct Word Count: "+localResults[14]+"\n");
+                displayArea.append("Word Count: "+String.format("%,.0f",Double.parseDouble(localResults[6]))+"\n");
+                displayArea.append("Sentence Count: "+String.format("%,.0f",Double.parseDouble(localResults[7]))+"\n");
+                displayArea.append("Average Word Length: "+String.format("%,.2f",Double.parseDouble(localResults[8]))+"\n");
+                displayArea.append("Average Sentence Length: "+String.format("%,.2f",Double.parseDouble(localResults[9]))+"\n");
+                displayArea.append("Punctuation Count: "+String.format("%,.0f",Double.parseDouble(localResults[10]))+"\n");
+                displayArea.append("Flesch Score Ease: "+String.format("%,.2f",Double.parseDouble(localResults[11]))+"\n");
+                displayArea.append("Syllable Count: "+String.format("%,.0f",Double.parseDouble(localResults[12]))+"\n");
+                displayArea.append("Average Syllable Per Word: "+String.format("%,.2f",Double.parseDouble(localResults[13]))+"\n");
+                displayArea.append("Distinct Word Count: "+String.format("%,.0f",Double.parseDouble(localResults[14]))+"\n");
                 
                 displayArea.setFont(new Font("Serif", Font.BOLD, 12));
             }

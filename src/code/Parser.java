@@ -123,7 +123,7 @@ public class Parser {
                         punctuationCount++; // Increment total punctuation count
 
                         // If currentToken is a period, exclamation point, or question mark
-                        if (currentToken.charAt(0) == '.' || currentToken.charAt(0) == '!' || currentToken.charAt(0) == '?') {
+                        if (currentToken.charAt(0) == '.' || currentToken.charAt(0) == '!' || currentToken.charAt(0) == '?' || currentToken.charAt(0)== ':' || currentToken.charAt(0) == ';' ) {
                             // This counts full sentences, NOT LINE BREAKS
                             // So poems without punctuation may be iffy
                             sentenceCount++;
@@ -141,17 +141,23 @@ public class Parser {
             }
             
          // Decimal format for rounding
-            DecimalFormat df = new DecimalFormat("0.00");
+           // DecimalFormat df = new DecimalFormat("0.00");
 
             // Calculate the averages
-            avgWordLength = Double.parseDouble(df.format(avgWordLength / wordCount));
+           /* avgWordLength = Double.parseDouble(df.format(avgWordLength / wordCount));
             avgWordsPerSentence = Double.parseDouble(df.format(wordCount / sentenceCount));
             avgSyllablesPerWord = Double.parseDouble(df.format(syllableCount / wordCount));
+            */
+            avgWordLength = avgWordLength / wordCount;
+            avgWordsPerSentence = wordCount / sentenceCount;
+            avgSyllablesPerWord = syllableCount / wordCount;
+
 
             // Formula found at
             // https://readabilityformulas.com/flesch-reading-ease-readability-formula.php
-            fleschScore = Double.parseDouble(df.format(206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord)));
+            //fleschScore = Double.parseDouble(df.format(206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord)));
 
+            fleschScore = 206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord);
             return true;
 
         } catch (FileNotFoundException ex) {
