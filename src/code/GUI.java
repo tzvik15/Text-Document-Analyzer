@@ -804,7 +804,7 @@ public class GUI {
                 
                 displayAreaQuery.setText(null);
                 
-                displayAreaQuery.append(view+": "+localResults[0]+"\n");
+                displayAreaQuery.append(view+": "+String.format("%,.2f",Double.parseDouble(localResults[0]))+"\n");
                 if(localResults[1]!=null) {
                 	displayAreaQuery.append("Author: "+localResults[1]+"\n");
                 	}

@@ -123,7 +123,7 @@ public class Parser {
                         punctuationCount++; // Increment total punctuation count
 
                         // If currentToken is a period, exclamation point, or question mark
-                        if (currentToken.charAt(0) == '.' || currentToken.charAt(0) == '!' || currentToken.charAt(0) == '?' || currentToken.charAt(0)== ':' || currentToken.charAt(0) == ';' ) {
+                        if (currentToken.charAt(0) == '.' || currentToken.charAt(0) == '!' || currentToken.charAt(0) == '?' ) {
                             // This counts full sentences, NOT LINE BREAKS
                             // So poems without punctuation may be iffy
                             sentenceCount++;
