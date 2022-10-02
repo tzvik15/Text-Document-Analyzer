@@ -6,7 +6,6 @@ import java.awt.event.*;
 import java.util.*;
 import java.io.*;
 import java.nio.file.*;
-import java.net.URISyntaxException;
 import java.net.URL;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -460,6 +459,7 @@ public class GUI {
 					authorTextField.setText("");
 					titleTextField.setText("");
 					publishYearTextField.setText("");
+					eraDropdown.setSelectedIndex(0);
 					genreDropdown.setSelectedIndex(0);
 					browseTextField.setText("");
 					refreshComponents();
@@ -508,6 +508,11 @@ public class GUI {
 			recordsDropdown.setBackground(Color.WHITE);
 			recordsDropdown.addFocusListener(focus);
 
+			// Add "delete all" option to combo box if data exists
+			if (db.dataExists()) {
+				recordsDropdown.addItem("DELETE ALL RECORDS");
+			}
+
 			// Create the Delete button
 			JButton deleteButton = new JButton("Delete");
 			deleteButton.setPreferredSize(new Dimension(100, 28));
@@ -526,6 +531,18 @@ public class GUI {
 			if (recordsDropdown.getSelectedItem() == "") {
 				Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
 				recordsDropdown.setBorder(redBorder);
+			} else if (recordsDropdown.getSelectedItem().equals("DELETE ALL RECORDS")) {
+				int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to ALL RECORDS?",
+						"Alert!", JOptionPane.YES_NO_OPTION);
+				if (confirmation == 0) {
+					db.dropTable();
+					db.createNewTable();
+					refreshComponents();
+					JOptionPane.showMessageDialog(null, "All records have been deleted.");
+				} else {
+					JOptionPane.showMessageDialog(null, "All record deletion CANCLED.");
+				}
+				
 			} else {
 				int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?",
 						"Alert!", JOptionPane.YES_NO_OPTION);
