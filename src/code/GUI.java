@@ -99,7 +99,7 @@ public class GUI {
 		// Display button Action Listener
 		private final ActionListener displayClick = event -> { // File > Query Database
 
-			if (recordsDropdown.getSelectedItem() == "") {
+			if (recordsDropdown.getSelectedItem().equals("")) {
 				Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
 				recordsDropdown.setBorder(redBorder);
 			} else {
@@ -528,7 +528,7 @@ public class GUI {
 
 		// Delete button Action Listener
 		private final ActionListener deleteClick = event -> { // File > Query Database
-			if (recordsDropdown.getSelectedItem() == "") {
+			if (recordsDropdown.getSelectedItem().equals("")) {
 				Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
 				recordsDropdown.setBorder(redBorder);
 			} else if (recordsDropdown.getSelectedItem().equals("DELETE ALL RECORDS")) {
@@ -646,7 +646,7 @@ public class GUI {
 		private final ActionListener displayClick = event -> { // File > Query Database
 			Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
 
-			if (recordsDropdown.getSelectedItem() == "") {
+			if (recordsDropdown.getSelectedItem().equals("")) {
 				recordsDropdown.setBorder(redBorder);
 			} else if (wordSearchTextField.getText().isEmpty()) {
 				wordSearchTextField.setBorder(redBorder);
@@ -802,11 +802,11 @@ public class GUI {
 		private final ActionListener displayClick = event -> { // File > Add Entry
 			Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
 
-			if (viewDropdown.getSelectedItem() == "") {
+			if (viewDropdown.getSelectedItem().equals("")) {
 				viewDropdown.setBorder(redBorder);
-			} else if (ofDropdown.getSelectedItem() == "") {
+			} else if (ofDropdown.getSelectedItem().equals("")) {
 				ofDropdown.setBorder(redBorder);
-			} else if (whereDropdown.getSelectedItem() == "") {
+			} else if (whereDropdown.getSelectedItem().equals("")) {
 				whereDropdown.setBorder(redBorder);
 			} else if (equalsTextfield.getText().isEmpty()) {
 				equalsTextfield.setBorder(redBorder);
