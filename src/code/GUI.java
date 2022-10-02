@@ -50,7 +50,7 @@ public class GUI {
 			super("Text Document Analyzer");
 			setSize(450, 500);
 			setLocationRelativeTo(null);
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
 			setResizable(true);
 
@@ -267,7 +267,7 @@ public class GUI {
 			super("Add Entry");
 			setSize(450, 380);
 			setLocationRelativeTo(null);
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
 			setResizable(false);
 
@@ -489,7 +489,7 @@ public class GUI {
 			super("Delete Entry");
 			setSize(450, 175);
 			setLocationRelativeTo(null);
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
 			setResizable(false);
 
@@ -566,7 +566,7 @@ public class GUI {
 			super("Search Distinct Words");
 			setSize(450, 400);
 			setLocationRelativeTo(null);
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
 			setResizable(false);
 
@@ -687,7 +687,7 @@ public class GUI {
 			super("Query Database");
 			setSize(450, 400);
 			setLocationRelativeTo(null);
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
 			setResizable(false);
 
@@ -828,7 +828,7 @@ public class GUI {
 			super("About - About Text Document Analyzer");
 			setSize(600, 400);
 			setLocationRelativeTo(null);
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			setLayout(new GridLayout(1, 1));
 			setResizable(false);
 
@@ -859,7 +859,7 @@ public class GUI {
 			super("Help - User Guide");
 			setSize(600, 500);
 			setLocationRelativeTo(null);
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			setLayout(new GridLayout(1, 1));
 			setMinimumSize(new Dimension(500, 400));
 
@@ -898,15 +898,15 @@ public class GUI {
 
 	private void refreshComponents() {
 		String[] records = db.retrieveAuthorsAndTitles();
-		mainWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+		mainWindow.recordsDropdown.setModel(new DefaultComboBoxModel<>(records));
 		mainWindow.displayArea.setText("");
 
 		if (deleteEntryWindow != null && deleteEntryWindow.isVisible() == true) {
-			deleteEntryWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+			deleteEntryWindow.recordsDropdown.setModel(new DefaultComboBoxModel<>(records));
 		}
 
 		if (searchWindow != null && searchWindow.isVisible() == true) {
-			searchWindow.recordsDropdown.setModel(new DefaultComboBoxModel<String>(records));
+			searchWindow.recordsDropdown.setModel(new DefaultComboBoxModel<>(records));
 			searchWindow.wordSearchTextField.setText("");
 			searchWindow.displayArea.setText("");
 		}
