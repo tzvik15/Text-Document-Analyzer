@@ -11,15 +11,15 @@ import java.util.*;
 
 public class Database {
 
-	// SQLite connection string
-	private static final String url = "jdbc:sqlite:./ParsedDocumentsData.db";
+	// SQLite connection string constant
+	private static final String SQL_URL = "jdbc:sqlite:./ParsedDocumentsData.db";
 
 	// initialize db
 	protected static void createNewDatabase(String fileName) {
 
-		String url = "jdbc:sqlite:./" + fileName;
+		String URL = "jdbc:sqlite:./" + fileName;
 
-		try (Connection conn = DriverManager.getConnection(url);) {
+		try (Connection conn = DriverManager.getConnection(URL);) {
 
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
@@ -39,7 +39,7 @@ public class Database {
 		// SQL statement for droping table
 		String sql = "DROP TABLE textdata";
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 			stmt.execute(sql);
 			System.out.println("table droped");
 		} catch (SQLException e) {
@@ -59,7 +59,7 @@ public class Database {
 				+ " syllableCount real,\n" + " avgSyllablePerWord real,\n" + " distinctWordCount real,\n"
 				+ " wordsHash text,\n" + " punctuationHash text\n" + ");";
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 			stmt.execute(sql);
 			System.out.println("Table already exists, or new table created");
 		} catch (SQLException e) {
@@ -74,7 +74,7 @@ public class Database {
 			String wordHash, String punctuationHash) {
 		String sql = "INSERT INTO textdata(author, title, published, era, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-		try (Connection conn = DriverManager.getConnection(url);
+		try (Connection conn = DriverManager.getConnection(SQL_URL);
 				PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
 			pstmt.setString(1, author);
@@ -104,9 +104,8 @@ public class Database {
 	// print all table data
 	protected void selectAll() {
 		String sql = "SELECT * FROM textdata";
-		String url = "jdbc:sqlite:./ParsedDocumentsData.db";
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 			ResultSet rs = stmt.executeQuery(sql);
 
 			// loop through the result set
@@ -130,7 +129,7 @@ public class Database {
 		ArrayList<String> titleArr = new ArrayList<>();
 		String[] titles;
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 
 			// Create and execute the SQL query, store the results
 			String sql = "SELECT TITLE FROM textdata";
@@ -160,7 +159,7 @@ public class Database {
 		ArrayList<String> authorTitleArrList = new ArrayList<>();
 		String[] authorTitlesStrArr;
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 
 			// Create and execute the SQL query, store the results
 			String sql = "SELECT AUTHOR, TITLE FROM textdata";
@@ -193,7 +192,7 @@ public class Database {
 
 		String[] resultStr = new String[17]; // String to hold the returned results
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 
 			// Create and execute the SQL query, store the results
 			String sql = "SELECT * FROM textdata WHERE TITLE=\'" + title + "\'";
@@ -280,7 +279,7 @@ public class Database {
 
 		double resultDoub = 0.0; // variable to hold the returned results
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 
 			// Create and execute the SQL query, store the results
 			String sql = method;
@@ -313,7 +312,7 @@ public class Database {
 
 	protected void deleteRowById(String id) {
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 
 			// Create SQL query, execute it
 			String sql = "DELETE FROM textdata WHERE id=\'" + id + "\'";
@@ -332,7 +331,7 @@ public class Database {
 
 		String[] resultStr = new String[17]; // String to hold the returned results
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 
 			// Create and execute the SQL query, store the results
 			String sql = "SELECT * FROM textdata WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title + "\'";
@@ -360,7 +359,7 @@ public class Database {
 		// Create the hashmap again
 		HashMap<String, Integer> myHashMap = new HashMap<>();
 
-		try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement();) {
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 
 			// Create and execute the SQL query, store the results
 			String sql = "SELECT " + field + " FROM textdata WHERE AUTHOR=\'" + author + "\' AND TITLE=\'" + title
@@ -371,7 +370,7 @@ public class Database {
 			// Get the results as a string
 			String resultStr = result.getString(field);
 
-			// This line removes the curly brackets from the string data { }
+			// This line removes the cURLy brackets from the string data { }
 			resultStr = resultStr.substring(1, resultStr.length() - 1);
 
 			// Split the data between comma/space ", "
