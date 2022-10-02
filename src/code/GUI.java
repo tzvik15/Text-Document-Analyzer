@@ -825,7 +825,7 @@ public class GUI {
 	private class AboutGUI extends JFrame {
 		private AboutGUI() {
 			// Window attributes
-			super("About - About Text Document Analyzer");
+			super("About Text Document Analyzer v"  + TextDocumentAnalyzer.tdaVersion);
 			setSize(600, 400);
 			setLocationRelativeTo(null);
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -840,11 +840,23 @@ public class GUI {
 
 			// Retrieve AboutHTML.html and display in About window
 			try {
-				URL url = GUI.class.getResource("AboutHTML.html");
-				File file = new File(url.toURI());
-				String aboutText = Files.readString(file.toPath());
-				aboutTextArea.setText(aboutText);
-			} catch (IOException | URISyntaxException ex) {
+//OLD CODE - DID NOT DISPLAY ABOUT IN COMPILED JAR
+//				URL url = GUI.class.getResource("AboutHTML.html");
+//				File file = new File(url.toURI());
+//				String aboutText = Files.readString(file.toPath());
+//				aboutTextArea.setText(aboutText);
+				
+				//NEW CODE TO DISPLAY ABOUT IN JAR
+				URL aboutUrl = this.getClass().getResource("AboutHTML.html");
+		        JEditorPane abouthtml = new JEditorPane();
+		        abouthtml.setPage(aboutUrl);
+		        abouthtml.setEditable( false );
+		        scrollPane.getViewport().add(abouthtml);
+		        
+//OLD CODE
+//			} catch (IOException | URISyntaxException ex) {
+		        		      
+			} catch (IOException ex) {//NEW CODE TO DISPLAY ABOUT IN JAR
 				aboutTextArea.setText("Could not load About page.");
 			}
 
@@ -856,7 +868,7 @@ public class GUI {
 	private class UserGuideGUI extends JFrame {
 		private UserGuideGUI() {
 			// Window attributes
-			super("Help - User Guide");
+			super("Text Document Analyzer v" + TextDocumentAnalyzer.tdaVersion + " User Guide");
 			setSize(600, 500);
 			setLocationRelativeTo(null);
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -866,20 +878,31 @@ public class GUI {
 			JEditorPane userGuideTextArea = new JEditorPane();
 			userGuideTextArea.setContentType("text/html");
 			userGuideTextArea.setEditable(false);
-			JScrollPane scrollPane = new JScrollPane(userGuideTextArea);
+			JScrollPane helpScrollPane = new JScrollPane(userGuideTextArea);
 
 			// Retrieve UserGuideHTML.html and display in UserGuide window
 			try {
-				URL url = GUI.class.getResource("UserGuideHTML.html");
-				File file = new File(url.toURI());
-				String aboutText = Files.readString(file.toPath());
-				userGuideTextArea.setText(aboutText);
-				userGuideTextArea.setCaretPosition(0);
-			} catch (IOException | URISyntaxException ex) {
+				// OLD CODE
+//				URL url = GUI.class.getResource("UserGuideHTML.html");
+//				File file = new File(url.toURI());
+//				String aboutText = Files.readString(file.toPath());
+//				userGuideTextArea.setText(aboutText);
+//				userGuideTextArea.setCaretPosition(0);
+				
+				//NEW CODE FOR USER GUIDE
+				URL helpUrl = this.getClass().getResource("UserGuideHTML.html");
+		        JEditorPane helpHtml = new JEditorPane();
+		        helpHtml.setPage(helpUrl);
+		        helpHtml.setEditable( false );
+		        helpScrollPane.getViewport().add(helpHtml);
+
+		        //OLD CODE FOR USER GUIDE		        
+//			} catch (IOException | URISyntaxException ex) {
+			} catch (IOException ex) {//NEW CODE TO DISPLAY ABOUT IN JAR
 				userGuideTextArea.setText("Could not load User Guide page.");
 			}
 
-			add(scrollPane); // <--- Scroll pane contains User Guide text area
+			add(helpScrollPane); // <--- Scroll pane contains User Guide text area
 		}
 	}
 

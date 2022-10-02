@@ -38,7 +38,7 @@ public class SyllableCounter {
         return count;
     }
 
-    static public boolean isVowel(char c) {
+    public static boolean isVowel(char c) {
         if (c == 'a' || c == 'i' || c == 'o' || c == 'u') {
             return true;
         } else {
