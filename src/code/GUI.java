@@ -943,6 +943,9 @@ public class GUI {
 
 		if (deleteEntryWindow != null && deleteEntryWindow.isVisible() == true) {
 			deleteEntryWindow.recordsDropdown.setModel(new DefaultComboBoxModel<>(records));
+			if (db.dataExists()) {
+				deleteEntryWindow.recordsDropdown.addItem("DELETE ALL RECORDS");
+			}
 		}
 
 		if (searchWindow != null && searchWindow.isVisible() == true) {
