@@ -101,7 +101,7 @@ public class Parser {
             currentToken = tokenizer.getNextToken();
 
             // While token isn't END_OF_FILE...
-            while (currentToken != "END_OF_FILE") {
+            while (!"END_OF_FILE".equals(currentToken)) {
                 // If currentToken is made of letters (so ignores numbers and punctuation)
                 if (Character.isLetter(currentToken.charAt(0))) {
                     wordCount++; // Increment total word count
