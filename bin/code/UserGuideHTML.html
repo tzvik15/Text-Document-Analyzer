@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	<title>TEXT DOCUMENT ANALYZER USER GUIDE</title>
+		<style>
+			body { margin:12px 24px; font-family: "Arial"; }
+			li { padding-left: 8px; }
+		</style>
+	</head>
+	<body>
+		<h2>TEXT DOCUMENT ANALYZER USER GUIDE</h2>
+		<p>The Text Document Analyzer is a stand alone application for parsing literary documents and extracting statistical and mathematical metrics from the written work. Extracted data is stored in an integrated database so that it may be recalled at the user's convenience. Data records can be added to the database, deleted from the database, or displayed using the GUI's menus and controls.</p>
+		<h3>DATABASE RECORD</h3>
+		<p>Records in the database consist of metadata entered by the user and metrics generated when a document is parsed by the application. Each record correlates to a single literary document that has been parsed by the application. Records can be added and deleted by the user through the use of the application's menu system.</p>
+		<p>Metadata fields stored in a record include:</p>
+		<ul>
+			<li>Author</li>
+			<li>Title</li>
+			<li>Year published</li>
+			<li>Genre</li>
+		</ul>
+		<p>Metrics fields stored in a record include:</p>
+		<ul>
+			<li>Word Count</li>
+			<li>Distinct Word Count</li>
+			<li>Punctuation Count</li>
+			<li>Sentence Count</li>
+			<li>Syllable Count</li>
+			<li>Average Word Length</li>
+			<li>Average Syllables Per Word</li>
+			<li>Average Sentence Length</li>
+			<li>Distinct Words List</li>
+			<li>Distinct Punctuation List</li>
+			<li>Flesch Reading Ease Score</li>
+		</ul>
+		<h3>HOW TO: UPLOAD TEXT DOCUMENT FOR ANALYSIS</h3>
+		<p>Uploading a text document for analysis can be done using the applications menu system and input components. Documents uploaded will be parsed by the application for metrics and all calculated data will be stored in the application database.</p>
+		<ol>
+			<li>Select <strong>File > Add Entry</strong> from the application's top menu. A new window will appear where you may browse for a file and enter metadata about the document.</li>
+			<li>Enter the Title, Author, Year Published, and Genre.</li>
+			<li>Click the <strong>Browse</strong> button.</li>
+			<li>Locate and select the document you would like to parse.</li>
+			<li>Click <strong>OK.</strong></li>
+			<li>Click the <strong>Parse</strong> button.</li>
+			<li>Allow the application time to parse the document.</li>
+		</ol>
+		<h3>HOW TO: DELETE AN ENTRY FROM THE DATABASE</h3>
+		<p>Deleting an entry from the database can be done using the application's top menu. Entries must be deleted one at a time. Entries deleted from the database cannot be recovered and must be recreated by reparsing the original text document.</p>
+		<ol>
+			<li>Select <strong>File > Delete Entry</strong> from the application's menu.</li>
+			<li>Use the dropdown menu to select the document record you would like to delete.</li>
+			<li>Select the <strong>Delete</strong> button.</li>
+			<li>Click <strong>OK</strong> to confirm that you want to delete the selected record.</li>
+			<li>Allow the application time to delete the database entry.</li>
+		</ol>
+		<h3>HOW TO: VIEW ANALYZED DOCUMENT'S METRICS</h3>
+		<p>After parsing a text document, data can be retrieved from the database and displayed in the application's display panel. All metadata and metrics stored in the document's database record will be displayed.</p>
+		<ol>
+			<li>Use the dropdown menu to select the document you would like to view.</li>
+			<li>Click the <strong>Display</strong> button.</li>
+			<li>The metrics will appear in the display panel at the bottom of the window.</li>
+		</ol>
+		<h3>HOW TO: QUERY THE DATABASE</h3>
+		<p>The Text Document Analyzer can also be used to perform more advanced queries on the literary data stored in the database. Though this information is not stored in a single database record, the application can aggregate data from multiple records sharing a common field. For example, using the Query Database window a user can ask for the average word count of all records where the author is Edgar Allan Poe.</p>
+		<ol>
+			<li>Click <strong>File > Query Database</strong> in the application's top menu.</li>
+			<li>Use the dropdown menus and the textbox to construct your query.</li>
+			<li>Click the <strong>Display</strong> button.</li>
+			<li>The results will appear in the display panel at the bottom of the window.</li>
+		</ol>
+		<p>Statistical and mathematical values such as Average, Total, and Min/Max can be selected using the VIEW dropdown menu. Metrics such as Word Count and Average Word Length can be selected using the OF dropdown. Criteria such as Author or Genre can be selected using the WHERE dropdown. The EQUALS textbox allows the user to enter a custom value corresponding to the WHERE dropdown option, such as the value Edgar Allan Poe for the Author option or Comedy for the Genre option.</p>
+		<h3>HOW TO: SEARCH FOR DISTINCT WORDS</h3>
+		<p>Once a document has been parsed, The Text Document Analyzer stores a list of every distinct word used in the document, as well as how many times each word was used. The Search Distinct Words window can be used to view this information. This functionality can be used to determine how many times the word "love" appears in Shakespeare's play "Much Ado About Nothing".</p>
+		<ol>
+			<li>Select <strong>File > Search Distinct Words</strong> from the application's top menu.</li>
+			<li>Use the dropdown menu to select a record to search.</li>
+			<li>Enter a word to search for into the textfield.</li>
+			<li>Click the <strong>Display</strong> button.</li>
+			<li>The results will appear in the display panel at the bottom of the window.</li>
+		</ol>
+		<h3>HOW TO: LEARN ABOUT THE PROJECT</h3>
+		<p>Information about the project is available if you would like to learn more about the application's development team and the creation of the Text Document Analyzer.</p>
+		<ol>
+			<li>Select <strong>About > About Text Document Analyzer</strong> from the application's top menu.</li>
+			<li>Read about the project in the new window.</li>
+		</ol>
+	</body>
+</html>

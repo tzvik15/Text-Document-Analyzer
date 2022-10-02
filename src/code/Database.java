@@ -50,7 +50,7 @@ public class Database {
 	// create new table with required schema
 	protected void createNewTable() {
 
-		if (tableExists()) {
+		if (dataExists()) {
 			System.out.println("exists");
 		} else System.out.println("does not exist");
 
@@ -105,7 +105,8 @@ public class Database {
 		}
 	}
 
-	private boolean tableExists(){
+	//tests if there is any data already stored in the db, returns boolean
+	private boolean dataExists(){
 		String sql = "SELECT * FROM textdata";
 		boolean exists = false;
 		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
