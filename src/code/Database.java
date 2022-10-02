@@ -49,11 +49,6 @@ public class Database {
 
 	// create new table with required schema
 	protected void createNewTable() {
-
-		if (dataExists()) {
-			System.out.println("exists");
-		} else System.out.println("does not exist");
-
 		// SQL statement for creating a new table
 		String sql = "CREATE TABLE IF NOT EXISTS textdata (\n" + " id integer PRIMARY KEY,\n"
 				+ " author text NOT NULL,\n" + " title text NOT NULL,\n" + " published integer NOT NULL,\n"
@@ -106,7 +101,7 @@ public class Database {
 	}
 
 	//tests if there is any data already stored in the db, returns boolean
-	private boolean dataExists(){
+	protected boolean dataExists(){
 		String sql = "SELECT * FROM textdata";
 		boolean exists = false;
 		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {

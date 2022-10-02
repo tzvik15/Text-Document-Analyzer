@@ -11,7 +11,15 @@ public class TextDocumentAnalyzer {
     public static void main(String[] args) {
         // create GUI object
         GUI gui = new GUI();
-        gui.db.createNewTable();
+        if (gui.db.dataExists()) {
+            ////TO DO/////////////////////////////
+            /////CALL PURGE DATA OPTION METHOD////
+            //////////////////////////////////////
+            System.out.println("exists");
+        } else {
+            System.out.println("does not exist");
+            gui.db.createNewTable();
+        }
         JFrame mainWindow = gui.getMainWindow();
         mainWindow.setVisible(true);
     }
