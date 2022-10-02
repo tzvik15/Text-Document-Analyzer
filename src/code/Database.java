@@ -50,6 +50,10 @@ public class Database {
 	// create new table with required schema
 	protected void createNewTable() {
 
+		if (tableExists()) {
+			System.out.println("exists");
+		} else System.out.println("does not exist");
+
 		// SQL statement for creating a new table
 		String sql = "CREATE TABLE IF NOT EXISTS textdata (\n" + " id integer PRIMARY KEY,\n"
 				+ " author text NOT NULL,\n" + " title text NOT NULL,\n" + " published integer NOT NULL,\n"
@@ -101,6 +105,19 @@ public class Database {
 		}
 	}
 
+	private boolean tableExists(){
+		String sql = "SELECT * FROM textdata";
+		boolean exists = false;
+		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
+			ResultSet rs = stmt.executeQuery(sql);
+			exists = rs.next();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return exists;
+	}
+	
+	
 	// print all table data
 	protected void selectAll() {
 		String sql = "SELECT * FROM textdata";
