@@ -72,6 +72,104 @@ public class Database {
 			double fleschScore, double syllableCount, double avgSyllablePerWord, double distinctWordCount,
 			String wordHash, String punctuationHash) {
 		String sql = "INSERT INTO textdata(author, title, published, era, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		
+		
+		
+		
+		// begin expweiment
+		String testInputStr = title.toLowerCase();
+		if (testInputStr.charAt(0) == 't' && testInputStr.charAt(1) == 'h' && testInputStr.charAt(2) == 'e') {
+			testInputStr = testInputStr.replaceFirst("the ", "");
+			System.out.println(testInputStr);
+		}
+
+
+			ArrayList<String> idAuthorTitleArrList = new ArrayList<>();
+			ArrayList<String> authorArrList = new ArrayList<>();
+			ArrayList<String> titleArrList = new ArrayList<>();
+			ArrayList<String> idArrList = new ArrayList<>();
+			String[] authorStrArr;
+			String[] titleStrArr;
+			String[] idStrArr;
+
+			try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
+
+				// Create and execute the SQL query, store the results
+				String sql2 = "SELECT ID, AUTHOR, TITLE FROM textdata";
+
+				ResultSet result = stmt.executeQuery(sql2);
+
+				while (result.next()) {
+					String retrievedID = String.valueOf(result.getInt("id"));
+					String retrievedAuthor = result.getString("author");
+					String retrievedTitle = result.getString("title");
+					if (retrievedTitle.charAt(0) == 't' && retrievedTitle.charAt(1) == 'h' && retrievedTitle.charAt(2) == 'e') {
+						retrievedTitle = retrievedTitle.replaceFirst("the ", "");
+					}
+					authorArrList.add(retrievedAuthor);
+					titleArrList.add(retrievedTitle);
+					idArrList.add(retrievedID);
+				}
+
+				conn.close(); // Close the database connection
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+
+			authorStrArr = new String[authorArrList.size() + 1];
+			authorStrArr[0] = "";
+			titleStrArr = new String[titleArrList.size() + 1];
+			titleStrArr[0] = "";
+			idStrArr = new String[idArrList.size() + 1];
+			idStrArr[0] = "";
+
+			for (int i = 0; i < authorArrList.size(); i++) {
+				authorStrArr[i + 1] = authorArrList.get(i);
+				titleStrArr[i + 1] = titleArrList.get(i);
+				idStrArr[i + 1] = idArrList.get(i);
+			}
+
+			int choice = 99;
+			int replaceID;
+			for (int i = 0; i < titleStrArr.length; i++) {
+				if (titleStrArr[i].equals(testInputStr)) {
+					idAuthorTitleArrList.add(idArrList.get(i)+" - " + authorArrList.get(i) + " - " + titleArrList.get(i));
+				}
+			}
+				if (idAuthorTitleArrList.isEmpty()) {
+					//TO DO: paste ALL insert code here
+				} else {
+
+					//TO DO: present dropdown of items in idAuthorTitleArrList
+					//ask what they want to do
+
+					switch (choice) {
+						case 1:
+							//add new entry
+							/*
+							 * TO DO: paste ALL insert code here
+							 */
+							break;
+						case 2:
+							//replace existing
+							/*
+							 * TO DO: 
+							 * 1) collect id to be replaced
+							 * 2) call deleteRowByID(collected id)
+							 * 3) paste ALL insert code 
+							 */
+							break;
+						case 3:
+							//abort transaction
+							/*
+							 * TO DO: display 'addition of row cancelled popup'
+							 */
+							break;
+						default:
+							break;
+					}
+				}
+		// end experiment
 
 		try (Connection conn = DriverManager.getConnection(SQL_URL);
 				PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -100,8 +198,8 @@ public class Database {
 		}
 	}
 
-	//tests if there is any data already stored in the db, returns boolean
-	protected boolean dataExists(){
+	// tests if there is any data already stored in the db, returns boolean
+	protected boolean dataExists() {
 		String sql = "SELECT * FROM textdata";
 		boolean exists = false;
 		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
@@ -112,8 +210,7 @@ public class Database {
 		}
 		return exists;
 	}
-	
-	
+
 	// print all table data
 	protected void selectAll() {
 		String sql = "SELECT * FROM textdata";
@@ -237,57 +334,57 @@ public class Database {
 		String[] resultArr = new String[4];
 
 		switch (of) {
-		case "Word Count":
-			convertedOf = "wordCount";
-			break;
-		case "Distinct Word Count":
-			convertedOf = "distinctWordCount";
-			break;
-		case "Punctuation Count":
-			convertedOf = "punctuationCount";
-			break;
-		case "Sentence Count":
-			convertedOf = "sentenceCount";
-			break;
-		case "Syllable Count":
-			convertedOf = "syllableCount";
-			break;
-		case "Flesch Reading Ease Score":
-			convertedOf = "Flesch";
-			break;
-		case "Average Words Per Sentence":
-			convertedOf = "avgSentenceLength";
-			break;
-		case "Average Syllables Per Word":
-			convertedOf = "avgSyllablePerWord";
-			break;
-		case "Average Word Length":
-			convertedOf = "avgWordLength";
-			break;
+			case "Word Count":
+				convertedOf = "wordCount";
+				break;
+			case "Distinct Word Count":
+				convertedOf = "distinctWordCount";
+				break;
+			case "Punctuation Count":
+				convertedOf = "punctuationCount";
+				break;
+			case "Sentence Count":
+				convertedOf = "sentenceCount";
+				break;
+			case "Syllable Count":
+				convertedOf = "syllableCount";
+				break;
+			case "Flesch Reading Ease Score":
+				convertedOf = "Flesch";
+				break;
+			case "Average Words Per Sentence":
+				convertedOf = "avgSentenceLength";
+				break;
+			case "Average Syllables Per Word":
+				convertedOf = "avgSyllablePerWord";
+				break;
+			case "Average Word Length":
+				convertedOf = "avgWordLength";
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 		switch (view) {
-		case "Min":
-			extra = true;
-			method = "SELECT MIN(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
-					+ equals + "\'";
-			break;
-		case "Max":
-			extra = true;
-			method = "SELECT MAX(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
-					+ equals + "\'";
-			break;
-		case "Average":
-			method = "SELECT AVG(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
-			break;
-		case "Total":
-			method = "SELECT SUM(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
-			break;
-		default:
-			break;
+			case "Min":
+				extra = true;
+				method = "SELECT MIN(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
+						+ equals + "\'";
+				break;
+			case "Max":
+				extra = true;
+				method = "SELECT MAX(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
+						+ equals + "\'";
+				break;
+			case "Average":
+				method = "SELECT AVG(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
+				break;
+			case "Total":
+				method = "SELECT SUM(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
+				break;
+			default:
+				break;
 		}
 
 		double resultDoub = 0.0; // variable to hold the returned results
@@ -405,7 +502,7 @@ public class Database {
 		return myHashMap; // Return the hashmap
 	}
 
-//main method for internal use to drop existing table in db for schema update
+	// main method for internal use to drop existing table in db for schema update
 	public static void main(String[] args) {
 		dropTable();
 	}
