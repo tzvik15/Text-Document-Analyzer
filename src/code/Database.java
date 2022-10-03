@@ -162,7 +162,7 @@ public class Database {
 						case 3:
 							//abort transaction
 							/*
-							 * TO DO: display 'addition of row cancelled popup'
+							 * TO DO: display 'addition of row cancelled' popup
 							 */
 							break;
 						default:
