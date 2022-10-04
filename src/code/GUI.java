@@ -14,16 +14,19 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 public class GUI {
+	// Instantiate objects for each window.
+	// This prevents opening multiple windows of the same type.
+	// User can't open two 'Add Entry' windows at once.
 	MainGUI mainWindow; // Instantiate the main window.
-	AddEntryGUI addEntryWindow; // Instantiate objects for each window.
-	DeleteEntryGUI deleteEntryWindow; // This prevents opening multiple windows of the same type.
-	SearchGUI searchWindow; // User can't open two 'Add Entry' windows at once.
+	AddEntryGUI addEntryWindow;
+	DeleteEntryGUI deleteEntryWindow;
+	SearchGUI searchWindow;
 	QueryGUI queryWindow;
 	AboutGUI aboutWindow;
 	UserGuideGUI userGuideWindow;
+
 	BufferedReader file;
 	Tokenizer tokenizer;
-
 	Database db = new Database();
 
 	// This function will return the MainGUI, ready to be setVisible()
@@ -42,7 +45,7 @@ public class GUI {
 		JPanel buttonPanel = new JPanel();
 		JPanel outputPanel = new JPanel();
 		JMenuBar topMenuBar = new TopMenuBar();
-		JTextArea displayArea;
+		JTextArea displayArea; // Main window data display area
 
 		private MainGUI() {
 			// Window attributes
@@ -98,18 +101,20 @@ public class GUI {
 
 		// Display button Action Listener
 		private final ActionListener displayClick = event -> { // File > Query Database
-
 			if (recordsDropdown.getSelectedItem().equals("")) {
 				Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
 				recordsDropdown.setBorder(redBorder);
 			} else {
+				// Retrieve user input
 				String recordStr = (String) recordsDropdown.getSelectedItem();
 				String[] authorAndTitle = recordStr.split(" - ");
 				String author = authorAndTitle[0];
 				String title = authorAndTitle[1];
 
+				// Retrieve the record from the database
 				String[] localResults = db.retrieveRecordByAuthorTitle(author, title);
 
+				// Display the results in the data display area
 				displayArea.setText(null);
 				displayArea.append("Author: " + localResults[1] + "\n");
 				displayArea.append("Title: " + localResults[2] + "\n");
@@ -244,7 +249,7 @@ public class GUI {
 
 	// The 'Add Entry' window
 	private class AddEntryGUI extends JFrame {
-		// declaring the input textfields to capture input with listeners
+		// Declaring the input textfields to capture input with listeners
 		JTextField authorTextField;
 		JTextField titleTextField;
 		JTextField publishYearTextField;
@@ -319,8 +324,8 @@ public class GUI {
 			JLabel genreLabel = new JLabel("Genre:");
 			genreLabel.setPreferredSize(new Dimension(90, 28));
 			genreLabel.setVerticalAlignment(SwingConstants.CENTER);
-			String[] genres = { "", "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", "Horror",
-					"Romance", "Sci-Fi" };
+			String[] genres = { "", "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", 
+				"Educational", "Reference", "Religious/Spiritual", "Horror", "Romance", "Sci-Fi" };
 			genreDropdown = new JComboBox<>(genres);
 			genreDropdown.setPreferredSize(new Dimension(275, 28));
 			genreDropdown.setBackground(Color.WHITE);
@@ -372,7 +377,7 @@ public class GUI {
 			add(parsePanel);
 		}
 
-		private final ActionListener browseClick = event -> { // File > Add Entry
+		private final ActionListener browseClick = event -> {
 			browseTextField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
 
 			try {
@@ -448,14 +453,15 @@ public class GUI {
 					double avgWordsPerSentence = parser.getAvgWordsPerSentence(); // Average words per sentence
 					double avgSyllablesPerWord = parser.getAvgSyllablesPerWord(); // Average syllables per words
 					double avgWordLength = parser.getAvgWordLength(); // Average word length
-					String wordsHash = parser.getWordHash();
-					String punctuationHash = parser.getPunctuationHash();
+					String wordsHash = parser.getWordHash(); // HashMap of <Word, Count> pairs
+					String punctuationHash = parser.getPunctuationHash(); // HashMap of <Punctuation, Count> pairs
 
 					// insert entry in table
 					db.insert(author, title, published, era, genre, wordCount, sentenceCount, avgWordLength,
 							avgWordsPerSentence, punctuationCount, fleschScore, syllableCount, avgSyllablesPerWord,
 							distinctWordsCount, wordsHash, punctuationHash);
 
+					// Reset the GUI fields
 					authorTextField.setText("");
 					titleTextField.setText("");
 					publishYearTextField.setText("");
@@ -535,6 +541,7 @@ public class GUI {
 				int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to ALL RECORDS?",
 						"Alert!", JOptionPane.YES_NO_OPTION);
 				if (confirmation == 0) {
+					// Drop, then recreate the table
 					db.dropTable();
 					db.createNewTable();
 					refreshComponents();
@@ -542,23 +549,24 @@ public class GUI {
 				} else {
 					JOptionPane.showMessageDialog(null, "All record deletion CANCLED.");
 				}
-				
 			} else {
 				int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?",
 						"Alert!", JOptionPane.YES_NO_OPTION);
 				if (confirmation == 0) {
-					// Value of the record dropdown as a string
+					// Retrieve user input
 					String recordStr = (String) recordsDropdown.getSelectedItem();
 					String[] authorAndTitle = recordStr.split(" - ");
 					String author = authorAndTitle[0];
 					String title = authorAndTitle[1];
 
-					// CALL DELETE RECORD HERE
+					// Delete the selected record
 					String[] localResults = db.retrieveRecordByAuthorTitle(author, title);
-					System.out.println(Arrays.toString(localResults));//***FOR TESTING ONLY - REMOVE BEFORE RELEASE***
 					db.deleteRowById(localResults[0]);
+
+					// Reset the GUI fields
 					refreshComponents();
 					recordsDropdown.setSelectedIndex(0);
+
 					JOptionPane.showMessageDialog(null, "The record " + author + " - " + title + " has been deleted.");
 				} else {
 					JOptionPane.showMessageDialog(null, "Record deletion CANCLED.");
@@ -594,22 +602,16 @@ public class GUI {
 			buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
 			outputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 8));
 
-			// Create a label for the dropdown menu
+			// Create the records dropdown menu
 			JLabel recordsDropdownLabel = new JLabel("Select a record to search:");
-
-			// Create the dropdown menu
-			// array 'options' will need to be populated with database records
 			String[] records = db.retrieveAuthorsAndTitles();
 			recordsDropdown = new JComboBox<>(records);
 			recordsDropdown.setPreferredSize(new Dimension(365, 28));
 			recordsDropdown.setBackground(Color.WHITE);
 			recordsDropdown.addFocusListener(focus);
 
-			// Create a label for the dropdown menu
+			// Create the word search field
 			JLabel wordSearchLabel = new JLabel("Enter a word to search for:");
-
-			// Create the dropdown menu
-			// array 'options' will need to be populated with database records
 			wordSearchTextField = new JTextField();
 			wordSearchTextField.setPreferredSize(new Dimension(365, 28));
 			wordSearchTextField.setBackground(Color.WHITE);
@@ -651,7 +653,7 @@ public class GUI {
 			} else if (wordSearchTextField.getText().isEmpty()) {
 				wordSearchTextField.setBorder(redBorder);
 			} else {
-				// Value of the record dropdown as a string
+				// Retrieve user input
 				String recordStr = (String) recordsDropdown.getSelectedItem();
 				String[] authorAndTitle = recordStr.split(" - ");
 				String author = authorAndTitle[0];
@@ -660,15 +662,17 @@ public class GUI {
 				// Value of the word textfield
 				String word = wordSearchTextField.getText();
 
-				// CALL SEARCH RECORD HERE
+				// Retrieve the distinct words hashmap from the database
 				HashMap<String, Integer> wordsHash = db.retrieveHashMapByAuthorTitle("wordsHash", author, title);
 				if (word.equals("*")) {
+					// If * entered display all words/counts sorted
 					displayArea.setText("");
 					TreeMap<String, Integer> sortedMap = new TreeMap<>(wordsHash);
 					sortedMap.forEach((key, value) -> {
 						displayArea.append(key + ": " + value + "\n");
 					});
 				} else {
+					// Search hashmap for word, display word and frequency
 					String msg = "";
 					if (wordsHash.containsKey(word.toLowerCase())) {
 						msg += "Word: " + word + "\nFrequency: " + wordsHash.get(word.toLowerCase());
@@ -721,7 +725,7 @@ public class GUI {
 			fieldsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 8));
 			fieldsPanel.setPreferredSize(new Dimension(280, 150));
 
-			// Create the Genre dropdown menu and label for the input panel
+			// Create the VIEW dropdown menu and label
 			JLabel viewLabel = new JLabel("VIEW:");
 			viewLabel.setPreferredSize(new Dimension(90, 28));
 			viewLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -731,7 +735,7 @@ public class GUI {
 			viewDropdown.setBackground(Color.WHITE);
 			viewDropdown.addFocusListener(focus);
 
-			// Create the Genre dropdown menu and label for the input panel
+			// Create the OF dropdown menu and label
 			JLabel ofLabel = new JLabel("OF:");
 			ofLabel.setPreferredSize(new Dimension(90, 28));
 			ofLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -743,7 +747,7 @@ public class GUI {
 			ofDropdown.setBackground(Color.WHITE);
 			ofDropdown.addFocusListener(focus);
 
-			// Create the Genre dropdown menu and label for the input panel
+			// Create the WHERE dropdown menu and label
 			JLabel whereLabel = new JLabel("WHERE:");
 			whereLabel.setPreferredSize(new Dimension(90, 28));
 			whereLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -753,7 +757,7 @@ public class GUI {
 			whereDropdown.setBackground(Color.WHITE);
 			whereDropdown.addFocusListener(focus);
 
-			// Create the Genre dropdown menu and label for the input panel
+			// Create the EQUALS dropdown menu and label
 			JLabel equalsLabel = new JLabel("EQUALS:");
 			equalsLabel.setPreferredSize(new Dimension(90, 28));
 			equalsLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -762,7 +766,7 @@ public class GUI {
 			equalsTextfield.setBackground(Color.WHITE);
 			equalsTextfield.addFocusListener(focus);
 
-			// Create the Parse button
+			// Create the Display button
 			JButton displayButton = new JButton("Display");
 			displayButton.setPreferredSize(new Dimension(100, 28));
 			displayButton.addActionListener(displayClick);
@@ -817,13 +821,9 @@ public class GUI {
 				String where = (String) whereDropdown.getSelectedItem();
 				String equals = equalsTextfield.getText().toLowerCase();
 
-				// CALL QUERY RECORD HERE
-				db.sqlQuery(view, of, where, equals);
-
+				// Query the database and display results
 				String[] localResults = db.sqlQuery(view, of, where, equals);
-
 				displayAreaQuery.setText(null);
-
 				displayAreaQuery
 						.append(view + ": " + String.format("%,.2f", Double.parseDouble(localResults[0])) + "\n");
 				if (localResults[1] != null) {
@@ -832,7 +832,6 @@ public class GUI {
 				if (localResults[2] != null) {
 					displayAreaQuery.append("Title: " + localResults[2] + "\n");
 				}
-
 				displayAreaQuery.setFont(new Font("Serif", Font.BOLD, 12));
 			}
 		};
@@ -857,27 +856,16 @@ public class GUI {
 
 			// Retrieve AboutHTML.html and display in About window
 			try {
-//OLD CODE - DID NOT DISPLAY ABOUT IN COMPILED JAR
-//				URL url = GUI.class.getResource("AboutHTML.html");
-//				File file = new File(url.toURI());
-//				String aboutText = Files.readString(file.toPath());
-//				aboutTextArea.setText(aboutText);
-				
-				//NEW CODE TO DISPLAY ABOUT IN JAR
 				URL aboutUrl = this.getClass().getResource("AboutHTML.html");
 		        JEditorPane abouthtml = new JEditorPane();
 		        abouthtml.setPage(aboutUrl);
 		        abouthtml.setEditable( false );
-		        scrollPane.getViewport().add(abouthtml);
-		        
-//OLD CODE
-//			} catch (IOException | URISyntaxException ex) {
-		        		      
-			} catch (IOException ex) {//NEW CODE TO DISPLAY ABOUT IN JAR
+		        scrollPane.getViewport().add(abouthtml);  		      
+			} catch (IOException ex) {
 				aboutTextArea.setText("Could not load About page.");
 			}
 
-			add(scrollPane); // <--- Scroll pane contains User Guide text area
+			add(scrollPane); // <--- Scroll pane contains About text area
 		}
 	}
 
@@ -899,23 +887,12 @@ public class GUI {
 
 			// Retrieve UserGuideHTML.html and display in UserGuide window
 			try {
-				// OLD CODE
-//				URL url = GUI.class.getResource("UserGuideHTML.html");
-//				File file = new File(url.toURI());
-//				String aboutText = Files.readString(file.toPath());
-//				userGuideTextArea.setText(aboutText);
-//				userGuideTextArea.setCaretPosition(0);
-				
-				//NEW CODE FOR USER GUIDE
 				URL helpUrl = this.getClass().getResource("UserGuideHTML.html");
-		        JEditorPane helpHtml = new JEditorPane();
-		        helpHtml.setPage(helpUrl);
-		        helpHtml.setEditable( false );
-		        helpScrollPane.getViewport().add(helpHtml);
-
-		        //OLD CODE FOR USER GUIDE		        
-//			} catch (IOException | URISyntaxException ex) {
-			} catch (IOException ex) {//NEW CODE TO DISPLAY ABOUT IN JAR
+		        JEditorPane helphtml = new JEditorPane();
+		        helphtml.setPage(helpUrl);
+		        helphtml.setEditable( false );
+		        helpScrollPane.getViewport().add(helphtml);
+			} catch (IOException ex) {
 				userGuideTextArea.setText("Could not load User Guide page.");
 			}
 
@@ -923,8 +900,7 @@ public class GUI {
 		}
 	}
 
-	// A focus listener to remove the red border from required fields when they gain
-	// focus
+	// Focus listener to remove the red border from required fields when they gain focus
 	private final FocusListener focus = new FocusListener() {
 		public void focusGained(FocusEvent e) {
 			JComponent field = (JComponent) e.getComponent();
