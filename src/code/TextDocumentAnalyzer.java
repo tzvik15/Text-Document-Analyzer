@@ -10,9 +10,7 @@ public class TextDocumentAnalyzer {
     public static void main(String[] args) {
         // create GUI object
         GUI gui = new GUI();
-        if (!gui.db.dataExists()) {
-            gui.db.createNewTable();
-        }
+        gui.db.createNewTable();
         JFrame mainWindow = gui.getMainWindow();
         mainWindow.setVisible(true);
     }
