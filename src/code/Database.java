@@ -14,7 +14,8 @@ public class Database {
 	// SQLite connection string constant
 	private static final String SQL_URL = "jdbc:sqlite:./ParsedDocumentsData.db";
 
-	// initialize db
+	// manual method for db creation
+	// type: auxiliary
 	protected static void createNewDatabase(String fileName) {
 
 		String URL = "jdbc:sqlite:./" + fileName;
@@ -33,8 +34,9 @@ public class Database {
 
 	}
 
-	// drop table to start new
-	protected static void dropTable() {
+	// drop table to clear ALL stored data
+	// type:stretch, auxiliary
+	protected void dropTable() {
 
 		// SQL statement for droping table
 		String sql = "DROP TABLE textdata";
@@ -48,6 +50,7 @@ public class Database {
 	}
 
 	// create new table with required schema
+	// type: core
 	protected void createNewTable() {
 		// SQL statement for creating a new table
 		String sql = "CREATE TABLE IF NOT EXISTS textdata (\n" + " id integer PRIMARY KEY,\n"
@@ -66,110 +69,119 @@ public class Database {
 		}
 	}
 
-	// insert new row
+	// insert new row NOTE: contains code and pseudo-code (with comments) for future
+	// application enhancement
+	// type: core
 	protected void insert(String author, String title, int published, String era, String genre, double wordCount,
 			double sentenceCount, double avgWordLength, double avgSentenceLength, double punctuationCount,
 			double fleschScore, double syllableCount, double avgSyllablePerWord, double distinctWordCount,
 			String wordHash, String punctuationHash) {
 		String sql = "INSERT INTO textdata(author, title, published, era, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		
-		
-		
-		
-		// begin expweiment
-		String testInputStr = title.toLowerCase();
-		if (testInputStr.charAt(0) == 't' && testInputStr.charAt(1) == 'h' && testInputStr.charAt(2) == 'e') {
-			testInputStr = testInputStr.replaceFirst("the ", "");
-			System.out.println(testInputStr);
-		}
-
-
-			ArrayList<String> idAuthorTitleArrList = new ArrayList<>();
-			ArrayList<String> authorArrList = new ArrayList<>();
-			ArrayList<String> titleArrList = new ArrayList<>();
-			ArrayList<String> idArrList = new ArrayList<>();
-			String[] authorStrArr;
-			String[] titleStrArr;
-			String[] idStrArr;
-
-			try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
-
-				// Create and execute the SQL query, store the results
-				String sql2 = "SELECT ID, AUTHOR, TITLE FROM textdata";
-
-				ResultSet result = stmt.executeQuery(sql2);
-
-				while (result.next()) {
-					String retrievedID = String.valueOf(result.getInt("id"));
-					String retrievedAuthor = result.getString("author");
-					String retrievedTitle = result.getString("title");
-					if (retrievedTitle.charAt(0) == 't' && retrievedTitle.charAt(1) == 'h' && retrievedTitle.charAt(2) == 'e') {
-						retrievedTitle = retrievedTitle.replaceFirst("the ", "");
-					}
-					authorArrList.add(retrievedAuthor);
-					titleArrList.add(retrievedTitle);
-					idArrList.add(retrievedID);
-				}
-
-				conn.close(); // Close the database connection
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
-
-			authorStrArr = new String[authorArrList.size() + 1];
-			authorStrArr[0] = "";
-			titleStrArr = new String[titleArrList.size() + 1];
-			titleStrArr[0] = "";
-			idStrArr = new String[idArrList.size() + 1];
-			idStrArr[0] = "";
-
-			for (int i = 0; i < authorArrList.size(); i++) {
-				authorStrArr[i + 1] = authorArrList.get(i);
-				titleStrArr[i + 1] = titleArrList.get(i);
-				idStrArr[i + 1] = idArrList.get(i);
-			}
-
-			int choice = 99;
-			int replaceID;
-			for (int i = 0; i < titleStrArr.length; i++) {
-				if (titleStrArr[i].equals(testInputStr)) {
-					idAuthorTitleArrList.add(idArrList.get(i)+" - " + authorArrList.get(i) + " - " + titleArrList.get(i));
-				}
-			}
-				if (idAuthorTitleArrList.isEmpty()) {
-					//TO DO: paste ALL insert code here
-				} else {
-
-					//TO DO: present dropdown of items in idAuthorTitleArrList
-					//ask what they want to do
-
-					switch (choice) {
-						case 1:
-							//add new entry
-							/*
-							 * TO DO: paste ALL insert code here
-							 */
-							break;
-						case 2:
-							//replace existing
-							/*
-							 * TO DO: 
-							 * 1) collect id to be replaced
-							 * 2) call deleteRowByID(collected id)
-							 * 3) paste ALL insert code 
-							 */
-							break;
-						case 3:
-							//abort transaction
-							/*
-							 * TO DO: display 'addition of row cancelled' popup
-							 */
-							break;
-						default:
-							break;
-					}
-				}
-		// end experiment
+		/*
+		 * //the following commented out code is the skeleton and pseudo-code for a
+		 * //future possible enhancment: a checker that identifies duplicate entries in
+		 * //the db. While the section is not complete, it has been left in to show
+		 * future
+		 * //plans for this application.
+		 * 
+		 * //begin segment
+		 * String testInputStr = title.toLowerCase();
+		 * if (testInputStr.charAt(0) == 't' && testInputStr.charAt(1) == 'h' &&
+		 * testInputStr.charAt(2) == 'e') {
+		 * testInputStr = testInputStr.replaceFirst("the ", "");
+		 * System.out.println(testInputStr);
+		 * }
+		 * 
+		 * ArrayList<String> idAuthorTitleArrList = new ArrayList<>();
+		 * ArrayList<String> authorArrList = new ArrayList<>();
+		 * ArrayList<String> titleArrList = new ArrayList<>();
+		 * ArrayList<String> idArrList = new ArrayList<>();
+		 * String[] authorStrArr;
+		 * String[] titleStrArr;
+		 * String[] idStrArr;
+		 * 
+		 * try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt =
+		 * conn.createStatement();) {
+		 * 
+		 * // Create and execute the SQL query, store the results
+		 * String sql2 = "SELECT ID, AUTHOR, TITLE FROM textdata";
+		 * 
+		 * ResultSet result = stmt.executeQuery(sql2);
+		 * 
+		 * while (result.next()) {
+		 * String retrievedID = String.valueOf(result.getInt("id"));
+		 * String retrievedAuthor = result.getString("author");
+		 * String retrievedTitle = result.getString("title");
+		 * if (retrievedTitle.charAt(0) == 't' && retrievedTitle.charAt(1) == 'h' &&
+		 * retrievedTitle.charAt(2) == 'e') {
+		 * retrievedTitle = retrievedTitle.replaceFirst("the ", "");
+		 * }
+		 * authorArrList.add(retrievedAuthor);
+		 * titleArrList.add(retrievedTitle);
+		 * idArrList.add(retrievedID);
+		 * }
+		 * 
+		 * conn.close(); // Close the database connection
+		 * } catch (SQLException e) {
+		 * System.out.println(e.getMessage());
+		 * }
+		 * 
+		 * authorStrArr = new String[authorArrList.size() + 1];
+		 * authorStrArr[0] = "";
+		 * titleStrArr = new String[titleArrList.size() + 1];
+		 * titleStrArr[0] = "";
+		 * idStrArr = new String[idArrList.size() + 1];
+		 * idStrArr[0] = "";
+		 * 
+		 * for (int i = 0; i < authorArrList.size(); i++) {
+		 * authorStrArr[i + 1] = authorArrList.get(i);
+		 * titleStrArr[i + 1] = titleArrList.get(i);
+		 * idStrArr[i + 1] = idArrList.get(i);
+		 * }
+		 * 
+		 * int choice = 99;
+		 * int replaceID;
+		 * for (int i = 0; i < titleStrArr.length; i++) {
+		 * if (titleStrArr[i].equals(testInputStr)) {
+		 * idAuthorTitleArrList.add(idArrList.get(i)+" - " + authorArrList.get(i) + " -
+		 * " + titleArrList.get(i));
+		 * }
+		 * }
+		 * if (idAuthorTitleArrList.isEmpty()) {
+		 * //TO DO: paste ALL insert code here
+		 * } else {
+		 * 
+		 * //TO DO: present dropdown of items in idAuthorTitleArrList
+		 * //ask what they want to do
+		 * 
+		 * switch (choice) {
+		 * case 1:
+		 * //add new entry
+		 * 
+		 * TO DO: paste ALL insert code here
+		 * 
+		 * break;
+		 * case 2:
+		 * //replace existing
+		 * 
+		 * TO DO:
+		 * 1) collect id to be replaced
+		 * 2) call deleteRowByID(collected id)
+		 * 3) paste ALL insert code
+		 * 
+		 * break;
+		 * case 3:
+		 * //abort transaction
+		 * 
+		 * TO DO: display 'addition of row cancelled' popup
+		 * 
+		 * break;
+		 * default:
+		 * break;
+		 * }
+		 * }
+		 * // end segment
+		 */
 
 		try (Connection conn = DriverManager.getConnection(SQL_URL);
 				PreparedStatement pstmt = conn.prepareStatement(sql);) {
@@ -199,6 +211,7 @@ public class Database {
 	}
 
 	// tests if there is any data already stored in the db, returns boolean
+	// type: stretch
 	protected boolean dataExists() {
 		String sql = "SELECT * FROM textdata";
 		boolean exists = false;
@@ -212,6 +225,7 @@ public class Database {
 	}
 
 	// print all table data
+	// type: auxiliary
 	protected void selectAll() {
 		String sql = "SELECT * FROM textdata";
 
@@ -235,6 +249,7 @@ public class Database {
 	}
 
 	// fetch all titles from db, store results in array
+	// type: auxiliary
 	protected String[] retrieveTitles() {
 		ArrayList<String> titleArr = new ArrayList<>();
 		String[] titles;
@@ -265,6 +280,7 @@ public class Database {
 	}
 
 	// fetch all author/title pairs from db, store results in array
+	// type: core
 	protected String[] retrieveAuthorsAndTitles() {
 		ArrayList<String> authorTitleArrList = new ArrayList<>();
 		String[] authorTitlesStrArr;
@@ -298,6 +314,7 @@ public class Database {
 	}
 
 	// retrieve single record by input title
+	// type: auxiliary
 	protected String[] retrieveRecordByTitle(String title) {
 
 		String[] resultStr = new String[17]; // String to hold the returned results
@@ -324,6 +341,8 @@ public class Database {
 		return resultStr; // Return the result string
 	}
 
+	// agrigate method to retrieve data from all rows, using a modular SQL query
+	// type: stretch
 	protected String[] sqlQuery(String view, String of, String where, String equals) {
 
 		String method = "";
@@ -420,6 +439,8 @@ public class Database {
 		return resultArr; // Return the result string
 	}
 
+	// method to delete a row in the db by the primary key (id)
+	// type: core
 	protected void deleteRowById(String id) {
 
 		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
@@ -437,6 +458,7 @@ public class Database {
 
 	// Retrieve a full record from the database given an author and title
 	// Returns the record as a string array
+	// type: core
 	protected String[] retrieveRecordByAuthorTitle(String author, String title) {
 
 		String[] resultStr = new String[17]; // String to hold the returned results
@@ -464,6 +486,7 @@ public class Database {
 
 	// Get the hashmap from the database
 	// Converts string data from database back into hashmap
+	// type: stretch
 	protected HashMap<String, Integer> retrieveHashMapByAuthorTitle(String field, String author, String title) {
 
 		// Create the hashmap again
@@ -500,11 +523,6 @@ public class Database {
 			System.out.println(e.getMessage());
 		}
 		return myHashMap; // Return the hashmap
-	}
-
-	// main method for internal use to drop existing table in db for schema update
-	public static void main(String[] args) {
-		dropTable();
 	}
 
 }
