@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GUI {
 	// Instantiate objects for each window.
@@ -387,6 +388,8 @@ public class GUI {
 				jf.setAlwaysOnTop(true);
 
 				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+				jfc.setAcceptAllFileFilterUsed(false);
+				jfc.setFileFilter(new FileNameExtensionFilter("Text file","txt"));
 				int returnValue = jfc.showOpenDialog(jf);
 
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
