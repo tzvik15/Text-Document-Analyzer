@@ -67,7 +67,7 @@ public class Parser {
     // Checks if token is in hashmap
     // Adds token to hashmap OR increments counter if it's already in there
     // Can be used for both distinct words and punctuation hashmap
-    public boolean updateHashMap(HashMap<String, Integer> hashmap, String token) {
+    protected boolean updateHashMap(HashMap<String, Integer> hashmap, String token) {
         // Check if word is already in the hashmap
         if (hashmap.containsKey(token)) {
             // If already contains word, increment counter
@@ -84,7 +84,7 @@ public class Parser {
     // Does distinct words, sentence count, etc.
     // Distinct Words Count adapted from code found at
     // https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/FrequencyCounter.java.html
-    public boolean parseDoc(BufferedReader f) {
+    protected boolean parseDoc(BufferedReader f) {
         String currentToken = ""; // Will hold the current word/punctuation being parsed
         SyllableCounter sylCounter = new SyllableCounter(); // Create the syllable counter object
 

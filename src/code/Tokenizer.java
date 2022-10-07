@@ -56,7 +56,7 @@ public class Tokenizer {
     }
 
     // Returns the next token in the current line of the input document
-    public String getNextToken() {
+    protected String getNextToken() {
         currentLexeme = "";  // Reset current lexeme
 
         // Ignore whitespace characters by continuing past them
@@ -93,7 +93,7 @@ public class Tokenizer {
     }
 
     // Close the input file
-    public void close() {
+    protected void close() {
         try {
             file.close();
         } catch (IOException ex) {

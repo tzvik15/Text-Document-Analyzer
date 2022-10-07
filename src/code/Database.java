@@ -25,7 +25,6 @@ public class Database {
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
 				System.out.println("The driver name is " + meta.getDriverName());
-				System.out.println("A new database has been created.");
 			}
 
 		} catch (SQLException e) {
@@ -43,7 +42,6 @@ public class Database {
 
 		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 			stmt.execute(sql);
-			System.out.println("table droped");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -57,13 +55,12 @@ public class Database {
 				+ " author text NOT NULL,\n" + " title text NOT NULL,\n" + " published integer NOT NULL,\n"
 				+ " era text NOT NULL,\n" + " genre text NOT NULL,\n" + " wordCount real NOT NULL,\n"
 				+ " sentenceCount real NOT NULL,\n" + " avgWordLength real NOT NULL,\n"
-				+ " avgSentenceLength real NOT NULL,\n" + " punctuationCount real NOT NULL,\n" + " Flesch real,\n"
-				+ " syllableCount real,\n" + " avgSyllablePerWord real,\n" + " distinctWordCount real,\n"
-				+ " wordsHash text,\n" + " punctuationHash text\n" + ");";
+				+ " avgSentenceLength real NOT NULL,\n" + " punctuationCount real NOT NULL,\n" + " Flesch real NOT NULL,\n"
+				+ " syllableCount real NOT NULL,\n" + " avgSyllablePerWord real NOT NULL,\n" + " distinctWordCount real NOT NULL,\n"
+				+ " wordsHash text NOT NULL,\n" + " punctuationHash text NOT NULL\n" + ");";
 
 		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 			stmt.execute(sql);
-			System.out.println("Table already exists, or new table created");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -204,7 +201,6 @@ public class Database {
 			pstmt.setString(16, punctuationHash);
 
 			pstmt.executeUpdate();
-			System.out.println("inserted row");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -234,14 +230,7 @@ public class Database {
 
 			// loop through the result set
 			while (rs.next()) {
-				System.out.println(rs.getInt("id") + "\t" + rs.getString("author") + "\t" + rs.getString("title") + "\t"
-						+ rs.getInt("published") + "\t" + rs.getString("genre") + "\t" + rs.getInt("wordCount") + "\t"
-						+ rs.getInt("sentenceCount") + "\t" + rs.getDouble("avgWordLength") + "\t"
-						+ rs.getDouble("avgSentenceLength") + "\t" + rs.getInt("punctuationCount"));
-				// testing capturing retrieved data as variable
-				String testStr = rs.getString("author");
-				System.out.println(testStr.length());
-
+				//do nothing. Insert desired code here
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -337,7 +326,6 @@ public class Database {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		System.out.println(resultStr);
 		return resultStr; // Return the result string
 	}
 
@@ -412,7 +400,6 @@ public class Database {
 
 			// Create and execute the SQL query, store the results
 			String sql = method;
-			// System.out.println(sql);
 
 			ResultSet result = stmt.executeQuery(sql);
 
@@ -432,10 +419,6 @@ public class Database {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		/*
-		 * for (int i = 0; i < resultArr.length; i++) {
-		 * System.out.println(resultArr[i]); }
-		 */
 		return resultArr; // Return the result string
 	}
 
@@ -448,7 +431,7 @@ public class Database {
 			// Create SQL query, execute it
 			String sql = "DELETE FROM textdata WHERE id=\'" + id + "\'";
 
-			stmt.executeQuery(sql);
+			stmt.executeUpdate(sql);
 
 			conn.close(); // Close the database connection
 		} catch (SQLException e) {

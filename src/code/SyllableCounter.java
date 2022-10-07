@@ -8,7 +8,7 @@ package code;
 
 public class SyllableCounter {
 
-    public double countSyllables(String s) {
+    protected double countSyllables(String s) {
         double count = 0;
         s = s.toLowerCase();
 
@@ -38,7 +38,7 @@ public class SyllableCounter {
         return count;
     }
 
-    public static boolean isVowel(char c) {
+    protected static boolean isVowel(char c) {
         if (c == 'a' || c == 'i' || c == 'o' || c == 'u') {
             return true;
         } else {
