@@ -325,8 +325,8 @@ public class GUI {
 			JLabel genreLabel = new JLabel("Genre:");
 			genreLabel.setPreferredSize(new Dimension(90, 28));
 			genreLabel.setVerticalAlignment(SwingConstants.CENTER);
-			String[] genres = { "", "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical", 
-				"Educational", "Reference", "Religious/Spiritual", "Horror", "Romance", "Sci-Fi" };
+			String[] genres = { "", "Action", "Adventure", "Comedy", "Mystery", "Fantasy", "Historical",
+					"Educational", "Reference", "Religious/Spiritual", "Horror", "Romance", "Sci-Fi" };
 			genreDropdown = new JComboBox<>(genres);
 			genreDropdown.setPreferredSize(new Dimension(275, 28));
 			genreDropdown.setBackground(Color.WHITE);
@@ -389,7 +389,7 @@ public class GUI {
 
 				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 				jfc.setAcceptAllFileFilterUsed(false);
-				jfc.setFileFilter(new FileNameExtensionFilter("Text file","txt"));
+				jfc.setFileFilter(new FileNameExtensionFilter("Text file", "txt"));
 				int returnValue = jfc.showOpenDialog(jf);
 
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -424,10 +424,6 @@ public class GUI {
 			} else if (browseTextField.getText().isEmpty()) {
 				browseTextField.setBorder(redBorder);
 			} else {
-				// create timeStart and timeEnd variables and start time
-				long timeStart = 0;
-				long timeEnd = 0;
-				timeStart = System.nanoTime();
 				Parser parser = new Parser();
 				boolean success = parser.parseDoc(file);
 
@@ -476,12 +472,6 @@ public class GUI {
 				} else {
 					JOptionPane.showMessageDialog(null, "Could not parse file.");
 				}
-				// end system time and print
-				timeEnd = System.nanoTime();
-				long timeResult = timeEnd - timeStart;
-				double timeResultSec = (double) timeResult / 1000000000;
-				System.out.println("Total Time (in seconds): " + timeResultSec);
-
 			}
 		};
 	}
@@ -844,7 +834,7 @@ public class GUI {
 	private class AboutGUI extends JFrame {
 		private AboutGUI() {
 			// Window attributes
-			super("About Text Document Analyzer v"  + TextDocumentAnalyzer.TDA_VERSION);
+			super("About Text Document Analyzer v" + TextDocumentAnalyzer.TDA_VERSION);
 			setSize(600, 400);
 			setLocationRelativeTo(null);
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -860,10 +850,10 @@ public class GUI {
 			// Retrieve AboutHTML.html and display in About window
 			try {
 				URL aboutUrl = this.getClass().getResource("AboutHTML.html");
-		        JEditorPane abouthtml = new JEditorPane();
-		        abouthtml.setPage(aboutUrl);
-		        abouthtml.setEditable( false );
-		        scrollPane.getViewport().add(abouthtml);  		      
+				JEditorPane abouthtml = new JEditorPane();
+				abouthtml.setPage(aboutUrl);
+				abouthtml.setEditable(false);
+				scrollPane.getViewport().add(abouthtml);
 			} catch (IOException ex) {
 				aboutTextArea.setText("Could not load About page.");
 			}
@@ -891,10 +881,10 @@ public class GUI {
 			// Retrieve UserGuideHTML.html and display in UserGuide window
 			try {
 				URL helpUrl = this.getClass().getResource("UserGuideHTML.html");
-		        JEditorPane helphtml = new JEditorPane();
-		        helphtml.setPage(helpUrl);
-		        helphtml.setEditable( false );
-		        helpScrollPane.getViewport().add(helphtml);
+				JEditorPane helphtml = new JEditorPane();
+				helphtml.setPage(helpUrl);
+				helphtml.setEditable(false);
+				helpScrollPane.getViewport().add(helphtml);
 			} catch (IOException ex) {
 				userGuideTextArea.setText("Could not load User Guide page.");
 			}
@@ -903,7 +893,8 @@ public class GUI {
 		}
 	}
 
-	// Focus listener to remove the red border from required fields when they gain focus
+	// Focus listener to remove the red border from required fields when they gain
+	// focus
 	private final FocusListener focus = new FocusListener() {
 		public void focusGained(FocusEvent e) {
 			JComponent field = (JComponent) e.getComponent();
@@ -911,7 +902,7 @@ public class GUI {
 			field.setBorder(defaultBorder);
 		}
 
-		public void focusLost(FocusEvent e) {//Empty method needed for FocusListener
+		public void focusLost(FocusEvent e) {// Empty method needed for FocusListener
 		};
 	};
 

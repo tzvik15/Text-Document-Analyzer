@@ -51,29 +51,27 @@ public class Database {
 	// type: core
 	protected void createNewTable() {
 		// SQL statement for creating a new table
-		String sql =
-				"""
+		String sql = """
 				CREATE TABLE IF NOT EXISTS textdata (
-				 id integer PRIMARY KEY,
-				 author text NOT NULL,
-				 title text NOT NULL,
-				 published integer NOT NULL,
-				 era text NOT NULL,
-				 genre text NOT NULL,
-				 wordCount real NOT NULL,
-				 sentenceCount real NOT NULL,
-				 avgWordLength real NOT NULL,
-				 avgSentenceLength real NOT NULL,
-				 punctuationCount real NOT NULL,
-				 Flesch real NOT NULL,
-				 syllableCount real NOT NULL,
-				 avgSyllablePerWord real NOT NULL,
-				 distinctWordCount real NOT NULL,
-				 wordsHash text NOT NULL,
-				 punctuationHash text NOT NULL
-				 );
-				"""
-				;
+				id integer PRIMARY KEY,
+				author text NOT NULL,
+				title text NOT NULL,
+				published integer NOT NULL,
+				era text NOT NULL,
+				genre text NOT NULL,
+				wordCount real NOT NULL,
+				sentenceCount real NOT NULL,
+				avgWordLength real NOT NULL,
+				avgSentenceLength real NOT NULL,
+				punctuationCount real NOT NULL,
+				Flesch real NOT NULL,
+				syllableCount real NOT NULL,
+				avgSyllablePerWord real NOT NULL,
+				distinctWordCount real NOT NULL,
+				wordsHash text NOT NULL,
+				punctuationHash text NOT NULL
+				);
+				""";
 
 		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 			stmt.execute(sql);
@@ -90,8 +88,9 @@ public class Database {
 			double fleschScore, double syllableCount, double avgSyllablePerWord, double distinctWordCount,
 			String wordHash, String punctuationHash) {
 		String sql = "INSERT INTO textdata(author, title, published, era, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		
-		/* ***POSSIBLE FUTURE ENCHANCEMENT***
+
+		/*
+		 * ***POSSIBLE FUTURE ENCHANCEMENT***
 		 * //the following commented out code is the skeleton and pseudo-code for a
 		 * //future possible enhancment: a checker that identifies duplicate entries in
 		 * //the db. While the section is not complete, it has been left in to show
@@ -318,57 +317,57 @@ public class Database {
 		String[] resultArr = new String[4];
 
 		switch (of) {
-		case "Word Count":
-			convertedOf = "wordCount";
-			break;
-		case "Distinct Word Count":
-			convertedOf = "distinctWordCount";
-			break;
-		case "Punctuation Count":
-			convertedOf = "punctuationCount";
-			break;
-		case "Sentence Count":
-			convertedOf = "sentenceCount";
-			break;
-		case "Syllable Count":
-			convertedOf = "syllableCount";
-			break;
-		case "Flesch Reading Ease Score":
-			convertedOf = "Flesch";
-			break;
-		case "Average Words Per Sentence":
-			convertedOf = "avgSentenceLength";
-			break;
-		case "Average Syllables Per Word":
-			convertedOf = "avgSyllablePerWord";
-			break;
-		case "Average Word Length":
-			convertedOf = "avgWordLength";
-			break;
+			case "Word Count":
+				convertedOf = "wordCount";
+				break;
+			case "Distinct Word Count":
+				convertedOf = "distinctWordCount";
+				break;
+			case "Punctuation Count":
+				convertedOf = "punctuationCount";
+				break;
+			case "Sentence Count":
+				convertedOf = "sentenceCount";
+				break;
+			case "Syllable Count":
+				convertedOf = "syllableCount";
+				break;
+			case "Flesch Reading Ease Score":
+				convertedOf = "Flesch";
+				break;
+			case "Average Words Per Sentence":
+				convertedOf = "avgSentenceLength";
+				break;
+			case "Average Syllables Per Word":
+				convertedOf = "avgSyllablePerWord";
+				break;
+			case "Average Word Length":
+				convertedOf = "avgWordLength";
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 		switch (view) {
-		case "Min":
-			extra = true;
-			method = "SELECT MIN(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
-					+ equals + "\'";
-			break;
-		case "Max":
-			extra = true;
-			method = "SELECT MAX(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
-					+ equals + "\'";
-			break;
-		case "Average":
-			method = "SELECT AVG(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
-			break;
-		case "Total":
-			method = "SELECT SUM(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
-			break;
-		default:
-			break;
+			case "Min":
+				extra = true;
+				method = "SELECT MIN(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
+						+ equals + "\'";
+				break;
+			case "Max":
+				extra = true;
+				method = "SELECT MAX(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
+						+ equals + "\'";
+				break;
+			case "Average":
+				method = "SELECT AVG(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
+				break;
+			case "Total":
+				method = "SELECT SUM(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
+				break;
+			default:
+				break;
 		}
 
 		double resultDoub = 0.0; // variable to hold the returned results
