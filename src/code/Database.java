@@ -18,9 +18,9 @@ public class Database {
 	// type: auxiliary
 	protected static void createNewDatabase(String fileName) {
 
-		String URL = "jdbc:sqlite:./" + fileName;
+		String url = "jdbc:sqlite:./" + fileName;
 
-		try (Connection conn = DriverManager.getConnection(URL);) {
+		try (Connection conn = DriverManager.getConnection(url);) {
 
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
@@ -51,13 +51,29 @@ public class Database {
 	// type: core
 	protected void createNewTable() {
 		// SQL statement for creating a new table
-		String sql = "CREATE TABLE IF NOT EXISTS textdata (\n" + " id integer PRIMARY KEY,\n"
-				+ " author text NOT NULL,\n" + " title text NOT NULL,\n" + " published integer NOT NULL,\n"
-				+ " era text NOT NULL,\n" + " genre text NOT NULL,\n" + " wordCount real NOT NULL,\n"
-				+ " sentenceCount real NOT NULL,\n" + " avgWordLength real NOT NULL,\n"
-				+ " avgSentenceLength real NOT NULL,\n" + " punctuationCount real NOT NULL,\n" + " Flesch real NOT NULL,\n"
-				+ " syllableCount real NOT NULL,\n" + " avgSyllablePerWord real NOT NULL,\n" + " distinctWordCount real NOT NULL,\n"
-				+ " wordsHash text NOT NULL,\n" + " punctuationHash text NOT NULL\n" + ");";
+		String sql =
+				"""
+				CREATE TABLE IF NOT EXISTS textdata (
+				 id integer PRIMARY KEY,
+				 author text NOT NULL,
+				 title text NOT NULL,
+				 published integer NOT NULL,
+				 era text NOT NULL,
+				 genre text NOT NULL,
+				 wordCount real NOT NULL,
+				 sentenceCount real NOT NULL,
+				 avgWordLength real NOT NULL,
+				 avgSentenceLength real NOT NULL,
+				 punctuationCount real NOT NULL,
+				 Flesch real NOT NULL,
+				 syllableCount real NOT NULL,
+				 avgSyllablePerWord real NOT NULL,
+				 distinctWordCount real NOT NULL,
+				 wordsHash text NOT NULL,
+				 punctuationHash text NOT NULL
+				 );
+				"""
+				;
 
 		try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt = conn.createStatement();) {
 			stmt.execute(sql);
@@ -74,110 +90,74 @@ public class Database {
 			double fleschScore, double syllableCount, double avgSyllablePerWord, double distinctWordCount,
 			String wordHash, String punctuationHash) {
 		String sql = "INSERT INTO textdata(author, title, published, era, genre, wordCount, sentenceCount, avgWordLength, avgSentenceLength, punctuationCount,Flesch, syllableCount, avgSyllablePerWord, distinctWordCount, wordsHash, punctuationHash ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		/*
+		
+		/* ***POSSIBLE FUTURE ENCHANCEMENT***
 		 * //the following commented out code is the skeleton and pseudo-code for a
 		 * //future possible enhancment: a checker that identifies duplicate entries in
 		 * //the db. While the section is not complete, it has been left in to show
-		 * future
-		 * //plans for this application.
+		 * future //plans for this application.
 		 * 
-		 * //begin segment
-		 * String testInputStr = title.toLowerCase();
-		 * if (testInputStr.charAt(0) == 't' && testInputStr.charAt(1) == 'h' &&
-		 * testInputStr.charAt(2) == 'e') {
-		 * testInputStr = testInputStr.replaceFirst("the ", "");
-		 * System.out.println(testInputStr);
-		 * }
+		 * //begin segment String testInputStr = title.toLowerCase(); if
+		 * (testInputStr.charAt(0) == 't' && testInputStr.charAt(1) == 'h' &&
+		 * testInputStr.charAt(2) == 'e') { testInputStr =
+		 * testInputStr.replaceFirst("the ", ""); System.out.println(testInputStr); }
 		 * 
-		 * ArrayList<String> idAuthorTitleArrList = new ArrayList<>();
-		 * ArrayList<String> authorArrList = new ArrayList<>();
-		 * ArrayList<String> titleArrList = new ArrayList<>();
-		 * ArrayList<String> idArrList = new ArrayList<>();
-		 * String[] authorStrArr;
-		 * String[] titleStrArr;
-		 * String[] idStrArr;
+		 * ArrayList<String> idAuthorTitleArrList = new ArrayList<>(); ArrayList<String>
+		 * authorArrList = new ArrayList<>(); ArrayList<String> titleArrList = new
+		 * ArrayList<>(); ArrayList<String> idArrList = new ArrayList<>(); String[]
+		 * authorStrArr; String[] titleStrArr; String[] idStrArr;
 		 * 
 		 * try (Connection conn = DriverManager.getConnection(SQL_URL); Statement stmt =
 		 * conn.createStatement();) {
 		 * 
-		 * // Create and execute the SQL query, store the results
-		 * String sql2 = "SELECT ID, AUTHOR, TITLE FROM textdata";
+		 * // Create and execute the SQL query, store the results String sql2 =
+		 * "SELECT ID, AUTHOR, TITLE FROM textdata";
 		 * 
 		 * ResultSet result = stmt.executeQuery(sql2);
 		 * 
-		 * while (result.next()) {
-		 * String retrievedID = String.valueOf(result.getInt("id"));
-		 * String retrievedAuthor = result.getString("author");
-		 * String retrievedTitle = result.getString("title");
-		 * if (retrievedTitle.charAt(0) == 't' && retrievedTitle.charAt(1) == 'h' &&
-		 * retrievedTitle.charAt(2) == 'e') {
-		 * retrievedTitle = retrievedTitle.replaceFirst("the ", "");
-		 * }
-		 * authorArrList.add(retrievedAuthor);
-		 * titleArrList.add(retrievedTitle);
-		 * idArrList.add(retrievedID);
-		 * }
+		 * while (result.next()) { String retrievedID =
+		 * String.valueOf(result.getInt("id")); String retrievedAuthor =
+		 * result.getString("author"); String retrievedTitle =
+		 * result.getString("title"); if (retrievedTitle.charAt(0) == 't' &&
+		 * retrievedTitle.charAt(1) == 'h' && retrievedTitle.charAt(2) == 'e') {
+		 * retrievedTitle = retrievedTitle.replaceFirst("the ", ""); }
+		 * authorArrList.add(retrievedAuthor); titleArrList.add(retrievedTitle);
+		 * idArrList.add(retrievedID); }
 		 * 
-		 * conn.close(); // Close the database connection
-		 * } catch (SQLException e) {
-		 * System.out.println(e.getMessage());
-		 * }
+		 * conn.close(); // Close the database connection } catch (SQLException e) {
+		 * System.out.println(e.getMessage()); }
 		 * 
-		 * authorStrArr = new String[authorArrList.size() + 1];
-		 * authorStrArr[0] = "";
-		 * titleStrArr = new String[titleArrList.size() + 1];
-		 * titleStrArr[0] = "";
-		 * idStrArr = new String[idArrList.size() + 1];
-		 * idStrArr[0] = "";
+		 * authorStrArr = new String[authorArrList.size() + 1]; authorStrArr[0] = "";
+		 * titleStrArr = new String[titleArrList.size() + 1]; titleStrArr[0] = "";
+		 * idStrArr = new String[idArrList.size() + 1]; idStrArr[0] = "";
 		 * 
-		 * for (int i = 0; i < authorArrList.size(); i++) {
-		 * authorStrArr[i + 1] = authorArrList.get(i);
-		 * titleStrArr[i + 1] = titleArrList.get(i);
-		 * idStrArr[i + 1] = idArrList.get(i);
-		 * }
+		 * for (int i = 0; i < authorArrList.size(); i++) { authorStrArr[i + 1] =
+		 * authorArrList.get(i); titleStrArr[i + 1] = titleArrList.get(i); idStrArr[i +
+		 * 1] = idArrList.get(i); }
 		 * 
-		 * int choice = 99;
-		 * int replaceID;
-		 * for (int i = 0; i < titleStrArr.length; i++) {
-		 * if (titleStrArr[i].equals(testInputStr)) {
+		 * int choice = 99; int replaceID; for (int i = 0; i < titleStrArr.length; i++)
+		 * { if (titleStrArr[i].equals(testInputStr)) {
 		 * idAuthorTitleArrList.add(idArrList.get(i)+" - " + authorArrList.get(i) + " -
-		 * " + titleArrList.get(i));
-		 * }
-		 * }
-		 * if (idAuthorTitleArrList.isEmpty()) {
-		 * //TO DO: paste ALL insert code here
-		 * } else {
+		 * " + titleArrList.get(i)); } } if (idAuthorTitleArrList.isEmpty()) { //TO DO:
+		 * paste ALL insert code here } else {
 		 * 
-		 * //TO DO: present dropdown of items in idAuthorTitleArrList
-		 * //ask what they want to do
+		 * //TO DO: present dropdown of items in idAuthorTitleArrList //ask what they
+		 * want to do
 		 * 
-		 * switch (choice) {
-		 * case 1:
-		 * //add new entry
+		 * switch (choice) { case 1: //add new entry
 		 * 
 		 * TO DO: paste ALL insert code here
 		 * 
-		 * break;
-		 * case 2:
-		 * //replace existing
+		 * break; case 2: //replace existing
 		 * 
-		 * TO DO:
-		 * 1) collect id to be replaced
-		 * 2) call deleteRowByID(collected id)
-		 * 3) paste ALL insert code
+		 * TO DO: 1) collect id to be replaced 2) call deleteRowByID(collected id) 3)
+		 * paste ALL insert code
 		 * 
-		 * break;
-		 * case 3:
-		 * //abort transaction
+		 * break; case 3: //abort transaction
 		 * 
 		 * TO DO: display 'addition of row cancelled' popup
 		 * 
-		 * break;
-		 * default:
-		 * break;
-		 * }
-		 * }
-		 * // end segment
+		 * break; default: break; } } // end segment
 		 */
 
 		try (Connection conn = DriverManager.getConnection(SQL_URL);
@@ -230,7 +210,7 @@ public class Database {
 
 			// loop through the result set
 			while (rs.next()) {
-				//do nothing. Insert desired code here
+				// do nothing. Insert desired code here
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -253,7 +233,6 @@ public class Database {
 				titleArr.add(result.getString("title"));
 			}
 
-			conn.close(); // Close the database connection
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -287,7 +266,6 @@ public class Database {
 				authorTitleArrList.add(author + " - " + title);
 			}
 
-			conn.close(); // Close the database connection
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -322,7 +300,6 @@ public class Database {
 				resultStr[i - 1] = result.getString(i);
 			}
 
-			conn.close(); // Close the database connection
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -341,57 +318,57 @@ public class Database {
 		String[] resultArr = new String[4];
 
 		switch (of) {
-			case "Word Count":
-				convertedOf = "wordCount";
-				break;
-			case "Distinct Word Count":
-				convertedOf = "distinctWordCount";
-				break;
-			case "Punctuation Count":
-				convertedOf = "punctuationCount";
-				break;
-			case "Sentence Count":
-				convertedOf = "sentenceCount";
-				break;
-			case "Syllable Count":
-				convertedOf = "syllableCount";
-				break;
-			case "Flesch Reading Ease Score":
-				convertedOf = "Flesch";
-				break;
-			case "Average Words Per Sentence":
-				convertedOf = "avgSentenceLength";
-				break;
-			case "Average Syllables Per Word":
-				convertedOf = "avgSyllablePerWord";
-				break;
-			case "Average Word Length":
-				convertedOf = "avgWordLength";
-				break;
+		case "Word Count":
+			convertedOf = "wordCount";
+			break;
+		case "Distinct Word Count":
+			convertedOf = "distinctWordCount";
+			break;
+		case "Punctuation Count":
+			convertedOf = "punctuationCount";
+			break;
+		case "Sentence Count":
+			convertedOf = "sentenceCount";
+			break;
+		case "Syllable Count":
+			convertedOf = "syllableCount";
+			break;
+		case "Flesch Reading Ease Score":
+			convertedOf = "Flesch";
+			break;
+		case "Average Words Per Sentence":
+			convertedOf = "avgSentenceLength";
+			break;
+		case "Average Syllables Per Word":
+			convertedOf = "avgSyllablePerWord";
+			break;
+		case "Average Word Length":
+			convertedOf = "avgWordLength";
+			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 
 		switch (view) {
-			case "Min":
-				extra = true;
-				method = "SELECT MIN(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
-						+ equals + "\'";
-				break;
-			case "Max":
-				extra = true;
-				method = "SELECT MAX(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
-						+ equals + "\'";
-				break;
-			case "Average":
-				method = "SELECT AVG(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
-				break;
-			case "Total":
-				method = "SELECT SUM(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
-				break;
-			default:
-				break;
+		case "Min":
+			extra = true;
+			method = "SELECT MIN(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
+					+ equals + "\'";
+			break;
+		case "Max":
+			extra = true;
+			method = "SELECT MAX(" + convertedOf + "), AUTHOR, TITLE FROM textdata WHERE LOWER(" + where + ") =\'"
+					+ equals + "\'";
+			break;
+		case "Average":
+			method = "SELECT AVG(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
+			break;
+		case "Total":
+			method = "SELECT SUM(" + convertedOf + ") FROM textdata WHERE LOWER(" + where + ") =\'" + equals + "\'";
+			break;
+		default:
+			break;
 		}
 
 		double resultDoub = 0.0; // variable to hold the returned results
@@ -415,7 +392,6 @@ public class Database {
 				resultArr[2] = resultTitle;
 			}
 
-			conn.close(); // Close the database connection
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -433,7 +409,6 @@ public class Database {
 
 			stmt.executeUpdate(sql);
 
-			conn.close(); // Close the database connection
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -460,7 +435,6 @@ public class Database {
 				resultStr[i - 1] = result.getString(i);
 			}
 
-			conn.close(); // Close the database connection
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -486,7 +460,7 @@ public class Database {
 			// Get the results as a string
 			String resultStr = result.getString(field);
 
-			// This line removes the cURLy brackets from the string data { }
+			// This line removes the cURLy brackets from the string data
 			resultStr = resultStr.substring(1, resultStr.length() - 1);
 
 			// Split the data between comma/space ", "
@@ -501,7 +475,7 @@ public class Database {
 
 				myHashMap.put(key, value);
 			}
-			conn.close(); // Close the database connection
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

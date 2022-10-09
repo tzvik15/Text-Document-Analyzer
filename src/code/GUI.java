@@ -206,42 +206,42 @@ public class GUI {
 		// New window DOES NOT OPEN if: window is not null and already visible
 		// Window is set to visible regardless
 		private final ActionListener addEntryClick = event -> { // File > Add Entry
-			if (addEntryWindow == null || addEntryWindow.isVisible() == false) {
+			if (addEntryWindow == null || !addEntryWindow.isVisible()) {
 				addEntryWindow = new AddEntryGUI();
 			}
 			addEntryWindow.setVisible(true);
 		};
 
 		private final ActionListener deleteEntryClick = event -> { // File > Delete Entry
-			if (deleteEntryWindow == null || deleteEntryWindow.isVisible() == false) {
+			if (deleteEntryWindow == null || !deleteEntryWindow.isVisible()) {
 				deleteEntryWindow = new DeleteEntryGUI();
 			}
 			deleteEntryWindow.setVisible(true);
 		};
 
 		private final ActionListener searchClick = event -> { // File > Search Distinct Words
-			if (searchWindow == null || searchWindow.isVisible() == false) {
+			if (searchWindow == null || !searchWindow.isVisible()) {
 				searchWindow = new SearchGUI();
 			}
 			searchWindow.setVisible(true);
 		};
 
 		private final ActionListener queryClick = event -> { // File > Query Database
-			if (queryWindow == null || queryWindow.isVisible() == false) {
+			if (queryWindow == null || !queryWindow.isVisible()) {
 				queryWindow = new QueryGUI();
 			}
 			queryWindow.setVisible(true);
 		};
 
 		private final ActionListener aboutClick = event -> { // About > About Text Document Analyzer
-			if (aboutWindow == null || aboutWindow.isVisible() == false) {
+			if (aboutWindow == null || !aboutWindow.isVisible()) {
 				aboutWindow = new AboutGUI();
 			}
 			aboutWindow.setVisible(true);
 		};
 
 		private final ActionListener userGuideClick = event -> { // Help > User Guide
-			if (userGuideWindow == null || userGuideWindow.isVisible() == false) {
+			if (userGuideWindow == null || !userGuideWindow.isVisible()) {
 				userGuideWindow = new UserGuideGUI();
 			}
 			userGuideWindow.setVisible(true);
@@ -844,7 +844,7 @@ public class GUI {
 	private class AboutGUI extends JFrame {
 		private AboutGUI() {
 			// Window attributes
-			super("About Text Document Analyzer v"  + TextDocumentAnalyzer.tdaVersion);
+			super("About Text Document Analyzer v"  + TextDocumentAnalyzer.TDA_VERSION);
 			setSize(600, 400);
 			setLocationRelativeTo(null);
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -876,7 +876,7 @@ public class GUI {
 	private class UserGuideGUI extends JFrame {
 		private UserGuideGUI() {
 			// Window attributes
-			super("Text Document Analyzer v" + TextDocumentAnalyzer.tdaVersion + " User Guide");
+			super("Text Document Analyzer v" + TextDocumentAnalyzer.TDA_VERSION + " User Guide");
 			setSize(600, 500);
 			setLocationRelativeTo(null);
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -911,7 +911,7 @@ public class GUI {
 			field.setBorder(defaultBorder);
 		}
 
-		public void focusLost(FocusEvent e) {
+		public void focusLost(FocusEvent e) {//Empty method needed for FocusListener
 		};
 	};
 
@@ -920,14 +920,14 @@ public class GUI {
 		mainWindow.recordsDropdown.setModel(new DefaultComboBoxModel<>(records));
 		mainWindow.displayArea.setText("");
 
-		if (deleteEntryWindow != null && deleteEntryWindow.isVisible() == true) {
+		if (deleteEntryWindow != null && deleteEntryWindow.isVisible()) {
 			deleteEntryWindow.recordsDropdown.setModel(new DefaultComboBoxModel<>(records));
 			if (db.dataExists()) {
 				deleteEntryWindow.recordsDropdown.addItem("DELETE ALL RECORDS");
 			}
 		}
 
-		if (searchWindow != null && searchWindow.isVisible() == true) {
+		if (searchWindow != null && searchWindow.isVisible()) {
 			searchWindow.recordsDropdown.setModel(new DefaultComboBoxModel<>(records));
 			searchWindow.wordSearchTextField.setText("");
 			searchWindow.displayArea.setText("");
