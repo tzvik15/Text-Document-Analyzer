@@ -5,7 +5,7 @@ import javax.swing.*;
 public class TextDocumentAnalyzer {
 
 	// Release.Phase.Build
-	public static final String TDA_VERSION = "0.4.0";
+	public static final String TDA_VERSION = "1.0.0";
 
 	public static void main(String[] args) {
 		// create GUI object

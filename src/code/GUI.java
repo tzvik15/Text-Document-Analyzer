@@ -540,7 +540,7 @@ public class GUI {
 					refreshComponents();
 					JOptionPane.showMessageDialog(null, "All records have been deleted.");
 				} else {
-					JOptionPane.showMessageDialog(null, "All record deletion CANCLED.");
+					JOptionPane.showMessageDialog(null, "All record deletion cancelled.");
 				}
 			} else {
 				int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?",
@@ -562,7 +562,7 @@ public class GUI {
 
 					JOptionPane.showMessageDialog(null, "The record " + author + " - " + title + " has been deleted.");
 				} else {
-					JOptionPane.showMessageDialog(null, "Record deletion CANCLED.");
+					JOptionPane.showMessageDialog(null, "Record deletion cancelled.");
 				}
 			}
 		};
