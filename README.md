@@ -8,6 +8,6 @@ The Text Document Analyzer is a stand alone application for parsing UTF-8 text d
 
 ### Requirements
 
-1. Java Run-time Environment version 8 Update 341: https://www.java.com/download/ie_manual.jsp
+1. Java Run-time Environment (JRE) version 8 Update 341: https://www.java.com/download/
 
-2. Java SDK version 18.0.2.1: https://www.oracle.com/java/technologies/downloads/#jdk18-windows
+2. Java Developer Kit (JDK) 19: https://www.oracle.com/java/technologies/downloads/
